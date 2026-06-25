@@ -121,6 +121,15 @@ html,body{height:100%;overflow:hidden;background:var(--parchment);font-family:'D
 .cat-christmas{background:#FFF8E7;color:#7B341E}
 .cat-extra{background:var(--linen);color:var(--driftwood)}
 .cat-evening{background:#F0EEFF;color:#3C3489}
+/* Cleaner-specific categories */
+.cat-bathroom{background:#E0F2FE;color:#0369A1}
+.cat-bedroom{background:#F3E8FF;color:#6B21A8}
+.cat-hallway{background:#F5F5F4;color:#57534E}
+.cat-livingroom{background:#FEF3C7;color:#92400E}
+.cat-stairs{background:#F1F5F9;color:#334155}
+.cat-landing{background:#CCFBF1;color:#0F766E}
+.cat-utility{background:#FFF7ED;color:#C2410C}
+.cat-kitchencons{background:#DCFCE7;color:#166534}
 /* drag handle */
 .drag-handle{color:var(--linen);cursor:grab;padding:6px 2px 6px 0;font-size:16px;line-height:1;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none;min-width:20px;text-align:center}
 .drag-handle:active{cursor:grabbing;color:var(--pebble)}
@@ -444,9 +453,9 @@ const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturda
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const SMONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const SDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const CAT_LABELS={personal:'Personal care',nursery:'Nursery / boys room',kitchen:'Kitchen / food',medical:'Medical',home:'Home / cleaning',garden:'Garden / outdoors',admin:'Admin / paperwork',errands:'Errands / outings',christmas:'Christmas',evening:'Evening',extra:'Extra'};
-const CAT_ORDER=['medical','personal','nursery','kitchen','home','garden','admin','errands','christmas','evening','extra'];
-const FREQ_LABELS={daily:'Every day',weekdays:'Weekdays','mon-wed-fri':'Mon/Wed/Fri','tue-thu':'Tue/Thu','weekly-mon':'Weekly (Mon)','weekly-wed':'Weekly (Wed)','weekly-fri':'Weekly (Fri)','as-needed':'As needed'};
+const CAT_LABELS={personal:'Personal care',nursery:'Nursery / boys room',kitchen:'Kitchen / food',medical:'Medical',home:'Home / cleaning',garden:'Garden / outdoors',admin:'Admin / paperwork',errands:'Errands / outings',christmas:'Christmas',evening:'Evening',extra:'Extra',bathroom:'Bathroom',bedroom:'Bedroom',hallway:'Hallway',livingroom:'Living room',stairs:'Stairs',landing:'Landing',utility:'Utility room',kitchencons:'Kitchen / conservatory'};
+const CAT_ORDER=['medical','personal','nursery','kitchen','home','garden','admin','errands','christmas','evening','bathroom','bedroom','hallway','livingroom','stairs','landing','utility','kitchencons','extra'];
+const FREQ_LABELS={daily:'Every day',weekdays:'Weekdays','mon-wed-fri':'Mon/Wed/Fri','tue-thu':'Tue/Thu','wed-fri':'Wed/Fri','weekly-mon':'Weekly (Mon)','weekly-wed':'Weekly (Wed)','weekly-fri':'Weekly (Fri)','as-needed':'As needed'};
 
 function todayKey(){
   const d=new Date();
@@ -522,6 +531,7 @@ function isScheduledToday(freq, date){
   if(freq==='weekly-mon')return d===1;
   if(freq==='weekly-wed')return d===3;
   if(freq==='weekly-fri')return d===5;
+  if(freq==='wed-fri')return d===3||d===5;
   return false;
 }
 function isNonDaily(freq){return freq!=='daily'&&freq!=='as-needed'&&freq!=='weekdays'&&freq!=='mon-wed-fri'&&freq!=='tue-thu'&&freq!=='weekly-mon'&&freq!=='weekly-wed'&&freq!=='weekly-fri'||freq==='as-needed'}
@@ -1245,22 +1255,28 @@ function _renderAdminHTML(){
       <div class="admin-add-form">
         <input type="text" id="new-name" placeholder="Task name" autocomplete="off">
         <select id="new-cat">
-          <option value="medical">Medical</option>
-          <option value="personal">Personal care</option>
-          <option value="nursery">Nursery / boys room</option>
-          <option value="kitchen">Kitchen / food</option>
+          <option value="kitchencons">Kitchen / conservatory</option>
+          <option value="bathroom">Bathroom</option>
+          <option value="bedroom">Bedroom</option>
+          <option value="hallway">Hallway</option>
+          <option value="livingroom">Living room</option>
+          <option value="stairs">Stairs</option>
+          <option value="landing">Landing</option>
+          <option value="utility">Utility room</option>
           <option value="home">Home / cleaning</option>
           <option value="garden">Garden / outdoors</option>
           <option value="admin">Admin / paperwork</option>
           <option value="errands">Errands / outings</option>
           <option value="evening">Evening</option>
           <option value="christmas">Christmas</option>
+          <option value="extra">Extra</option>
         </select>
         <select id="new-freq">
           <option value="daily">Every day</option>
           <option value="weekdays">Weekdays (Mon–Fri)</option>
           <option value="mon-wed-fri">Mon / Wed / Fri</option>
           <option value="tue-thu">Tue / Thu</option>
+          <option value="wed-fri">Wed / Fri</option>
           <option value="weekly-mon">Weekly – Monday</option>
           <option value="weekly-wed">Weekly – Wednesday</option>
           <option value="weekly-fri">Weekly – Friday</option>
