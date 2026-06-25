@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Village">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Village</title>
+<title>Village — Cleaning</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap" rel="stylesheet">
@@ -15,18 +15,18 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   /* Village colour tokens */
-  --forest:#2D6A4F;
-  --deep-forest:#1B4332;
-  --sage:#52B788;
-  --mist:#E8F5EE;
+  --forest:#4C1D95;
+  --deep-forest:#2E1065;
+  --sage:#8B5CF6;
+  --mist:#EDE9FE;
   --stone:#1C1917;
   --driftwood:#78716C;
   --pebble:#9B9589;
   --parchment:#F7F5F2;
   --linen:#EAE6E1;
   --white:#FFFFFF;
-  --ember:#C05621;
-  --warm-white:#FEF3EC;
+  --ember:#BE185D;
+  --warm-white:#FDF2F8;
 
   /* Mapped to app vars */
   --bg:var(--white);
@@ -62,10 +62,15 @@ html,body{height:100%;overflow:hidden;background:var(--parchment);font-family:'D
 .topbar-title{font-size:19px;font-weight:700;color:var(--white)}
 .easy-toggle{display:flex;align-items:center;gap:6px;flex-shrink:0;padding-bottom:2px}
 .easy-label{font-size:12px;color:var(--pebble);white-space:nowrap}
-.toggle-sw{width:40px;height:24px;border-radius:12px;background:rgba(255,255,255,.2);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-sw{width:40px;height:24px;border-radius:12px;background:rgba(255,255,255,.2);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .toggle-sw.on{background:var(--sage)}
 .toggle-sw::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s}
 .toggle-sw.on::after{transform:translateX(16px)}
+/* Light variant for use on white card backgrounds */
+.toggle-sw-light{width:44px;height:26px;border-radius:13px;background:var(--linen);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.toggle-sw-light.on{background:var(--forest)}
+.toggle-sw-light::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.toggle-sw-light.on::after{transform:translateX(18px)}
 .screen{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:16px;display:none}
 .screen.active{display:block}
 
@@ -93,11 +98,12 @@ html,body{height:100%;overflow:hidden;background:var(--parchment);font-family:'D
 .task-card.done .sess-badge{display:none}
 .task-card.done .task-note{display:none}
 .task-card.done .info-btn{display:none}
-.task-card.done .menu-btn{display:none}
+.task-card.done .remove-btn{display:none}
+.task-card.done .drag-handle{display:none}
 .task-card.done .tick{width:22px;height:22px;border-width:1.5px}
 .easy-mode .task-card.done .task-name{font-size:15px}
 .task-row{display:flex;align-items:center;gap:14px;padding:var(--task-pad) 14px var(--task-pad) 16px;cursor:pointer;user-select:none}
-.tick{width:var(--tick-size);height:var(--tick-size);border-radius:50%;border:2px solid var(--linen);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 200ms ease}
+.tick{width:var(--tick-size);height:var(--tick-size);border-radius:50%;border:2px solid var(--linen);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 200ms ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent;cursor:pointer}
 .tick.on{background:var(--forest);border-color:var(--forest)}
 .tick svg{display:none}
 .tick.on svg{display:block}
@@ -106,19 +112,23 @@ html,body{height:100%;overflow:hidden;background:var(--parchment);font-family:'D
 .task-badge{display:inline-block;margin-top:6px;font-size:var(--badge-size);font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:.02em}
 .cat-personal{background:#F3EFF9;color:#3C3489}
 .cat-nursery{background:#FFF0F5;color:#9B2C5A}
-.cat-kitchen{background:#E8F5E9;color:#27500A}
+.cat-kitchen{background:#F3E8FF;color:#4C1D95}
 .cat-medical{background:var(--warm-white);color:var(--ember)}
 .cat-home{background:#FFF3E0;color:#633806}
-.cat-garden{background:#E8F5E9;color:#1B5E20}
+.cat-garden{background:#F3E8FF;color:#4C1D95}
 .cat-admin{background:#E3F2FD;color:#0C447C}
 .cat-errands{background:#F3EFF9;color:#4A1554}
 .cat-christmas{background:#FFF8E7;color:#7B341E}
 .cat-extra{background:var(--linen);color:var(--driftwood)}
+.cat-evening{background:#F0EEFF;color:#3C3489}
+/* drag handle */
+.drag-handle{color:var(--linen);cursor:grab;padding:6px 2px 6px 0;font-size:16px;line-height:1;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none;min-width:20px;text-align:center}
+.drag-handle:active{cursor:grabbing;color:var(--pebble)}
+.task-card.dragging{opacity:.4;border:1.5px dashed var(--forest)}
+.task-card.drag-over{border-top:3px solid var(--forest)}
 .task-note{font-size:13px;color:var(--driftwood);padding:0 16px 14px 60px;line-height:1.5}
 .easy-mode .task-note{font-size:17px;padding-left:76px}
-.menu-btn{background:none;border:none;color:var(--pebble);cursor:pointer;padding:6px;font-size:22px;line-height:1;flex-shrink:0}
-
-/* pick screen */
+/* remove button on task card */
 .pick-header{background:var(--white);border-bottom:1px solid var(--linen);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:10}
 .pick-header-title{font-size:17px;font-weight:700;color:var(--stone)}
 .pick-header-sub{font-size:13px;color:var(--driftwood);margin-top:2px}
@@ -149,17 +159,31 @@ html,body{height:100%;overflow:hidden;background:var(--parchment);font-family:'D
 .modal-title{font-size:17px;font-weight:700;color:var(--stone);margin-bottom:4px}
 .modal-cat{font-size:12px;color:var(--pebble);margin-bottom:16px;font-weight:500;letter-spacing:.03em;text-transform:uppercase}
 .modal-section-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--pebble);margin-bottom:6px}
-.modal-desc{font-size:15px;color:var(--driftwood);line-height:1.6;background:var(--parchment);border-radius:12px;padding:14px 16px;min-height:60px;white-space:pre-wrap;word-break:break-word;border:1px solid var(--linen)}
+.modal-desc{font-size:15px;color:var(--stone);line-height:1.6;background:var(--parchment);border-radius:12px;padding:14px 16px;min-height:60px;white-space:pre-wrap;word-break:break-word;border:1px solid var(--linen)}
 .modal-session-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600}
 .sess-lunchtime{background:#FFF8E7;color:#7B4A0A}
 .sess-afternoon{background:#EEF4FF;color:#1A3A7C}
-.sess-both{background:var(--mist);color:var(--deep-forest)}
+.sess-evening{background:#F0EEFF;color:#3C3489}
 .sess-unset{background:var(--linen);color:var(--pebble)}
-.modal-close{width:100%;padding:15px;border:1px solid var(--linen);background:var(--parchment);border-radius:14px;font-size:15px;color:var(--driftwood);cursor:pointer;font-family:inherit;margin-top:16px;font-weight:500}
+.modal-close{width:100%;padding:15px;border:none;background:var(--forest);border-radius:14px;font-size:15px;color:#fff;cursor:pointer;font-family:inherit;margin-top:16px;font-weight:600;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.modal-close:active{opacity:.85}
 /* info button on task card */
-.info-btn{background:none;border:none;color:var(--pebble);cursor:pointer;padding:6px 4px;font-size:16px;line-height:1;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;transition:background .1s}
+.info-btn{background:none;border:none;color:var(--pebble);cursor:pointer;padding:6px 4px;font-size:16px;line-height:1;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;transition:background .1s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .info-btn:active{background:var(--linen)}
-/* session badge on task */
+
+/* Easy mode — larger, more visible info button */
+.easy-mode .info-btn{width:40px;height:40px;font-size:22px;color:var(--forest);background:var(--mist);border-radius:50%}
+.easy-mode .info-btn:active{background:var(--sage);color:#fff}
+
+/* Easy mode — stronger modal text */
+.easy-mode .modal-title{font-size:22px}
+.easy-mode .modal-cat{font-size:15px;color:var(--driftwood)}
+.easy-mode .modal-section-label{font-size:14px;color:var(--stone)}
+.easy-mode .modal-desc{font-size:19px;color:var(--stone);line-height:1.7;font-weight:500}
+.easy-mode .modal-close{font-size:19px;padding:20px;border-radius:18px}
+/* remove button on task card */
+.remove-btn{background:none;border:none;color:var(--pebble);cursor:pointer;padding:4px 6px;font-size:18px;line-height:1;flex-shrink:0;opacity:0.5;transition:opacity .15s;font-weight:300;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.remove-btn:active,.remove-btn:hover{opacity:1;color:var(--ember)}
 .sess-badge{display:inline-block;margin-top:4px;margin-left:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
 /* admin session select */
 .sess-select{padding:6px 10px;border:1px solid var(--linen);border-radius:8px;background:var(--white);color:var(--stone);font-size:12px;cursor:pointer;font-family:inherit;flex-shrink:0}
@@ -187,13 +211,14 @@ input:focus,select:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(45
 .btn:active{opacity:.85}
 .flash{display:none;text-align:center;padding:12px;background:var(--mist);border-radius:12px;color:var(--deep-forest);font-size:14px;font-weight:600;margin-top:12px}
 .flash.show{display:block}
-.master-item{display:flex;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid var(--linen)}
+.master-item{display:flex;align-items:flex-start;gap:8px;padding:14px 0;border-bottom:1px solid var(--linen)}
 .master-item:last-child{border-bottom:none}
 .master-item-info{flex:1;min-width:0}
-.master-item-name{font-size:14px;color:var(--stone);line-height:1.35;font-weight:500}
+.master-item-name{font-size:14px;color:var(--stone);line-height:1.35;font-weight:500;word-break:break-word}
 .master-item.inactive .master-item-name{color:var(--pebble);text-decoration:line-through}
 .master-freq{font-size:11px;color:var(--pebble);margin-top:2px}
-.tog-btn{padding:5px 11px;border:1px solid var(--linen);border-radius:8px;background:var(--parchment);color:var(--driftwood);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0}
+.master-item-controls{display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:nowrap}
+.tog-btn{padding:5px 11px;border:1px solid var(--linen);border-radius:8px;background:var(--parchment);color:var(--driftwood);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .tog-btn.on{background:var(--mist);color:var(--deep-forest);border-color:var(--sage)}
 .del-btn{background:none;border:none;color:var(--pebble);cursor:pointer;font-size:20px;padding:4px 6px;line-height:1;flex-shrink:0}
 .xmas-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
@@ -218,8 +243,31 @@ input:focus,select:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(45
 .step{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;font-size:14px;color:var(--driftwood);line-height:1.5}
 .step-num{width:22px;height:22px;border-radius:50%;background:var(--forest);color:#fff;font-size:12px;font-weight:700;text-align:center;line-height:22px;flex-shrink:0}
 .loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px}
-.spinner{width:32px;height:32px;border:2.5px solid var(--linen);border-top-color:var(--forest);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:36px;height:36px;border:3px solid var(--linen);border-top-color:var(--forest);border-radius:50%;animation:spin .7s linear infinite;-webkit-animation:spin .7s linear infinite}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@-webkit-keyframes spin{0%{-webkit-transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg)}}
+@media print{
+  body{overflow:visible!important;height:auto!important}
+  html{overflow:visible!important;height:auto!important}
+  #app,#lock-screen{display:none!important}
+  #print-content{
+    display:block!important;
+    position:absolute!important;
+    top:0!important;left:0!important;
+    width:100%!important;
+    height:auto!important;
+    overflow:visible!important;
+    background:#fff!important;
+  }
+  .no-print{display:none!important}
+  .print-session-block{break-before:page;page-break-before:always}
+  .print-session-block:first-of-type{break-before:avoid;page-break-before:avoid}
+  .print-session-header{break-inside:avoid;page-break-inside:avoid}
+  .print-task-row{break-inside:avoid;page-break-inside:avoid}
+  .print-signoff{break-inside:avoid;page-break-inside:avoid}
+  tr{break-inside:avoid;page-break-inside:avoid}
+  @page{margin:1.2cm;size:A4}
+}
 .loading-wrap p{font-size:15px;color:var(--pebble)}
 .empty{text-align:center;padding:50px 20px;color:var(--pebble);font-size:15px;line-height:1.6}
 .err-banner{background:var(--warm-white);color:var(--ember);padding:12px 16px;border-radius:14px;font-size:13px;margin:0 14px 10px;line-height:1.5;border:1px solid #F4C5A8}
@@ -230,13 +278,7 @@ input:focus,select:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(45
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0;border:none;background:none;cursor:pointer;gap:3px;color:var(--pebble);font-size:11px;font-weight:600;font-family:inherit;letter-spacing:.02em}
 .nav-btn.active{color:var(--forest)}
 .nav-btn svg{width:22px;height:22px}
-.sheet-bg{display:none;position:fixed;inset:0;background:rgba(28,25,23,.6);z-index:200;align-items:flex-end;justify-content:center}
-.sheet-bg.open{display:flex}
-.sheet{background:var(--white);border-radius:24px 24px 0 0;padding:22px 20px calc(22px + var(--safe-bot));width:100%;max-width:430px}
-.sheet-title{font-size:16px;font-weight:600;color:var(--stone);margin-bottom:14px;line-height:1.4}
-.sheet-opt{width:100%;padding:15px 16px;border:1px solid var(--linen);border-radius:14px;background:var(--parchment);text-align:left;font-size:15px;cursor:pointer;margin-bottom:8px;font-family:inherit;color:var(--stone);font-weight:500}
-.sheet-opt.red{color:var(--ember);background:var(--warm-white);border-color:#F4C5A8}
-.sheet-cancel{width:100%;padding:15px;border:none;background:none;font-size:15px;color:var(--pebble);cursor:pointer;font-family:inherit}
+/* lock screen */
 </style>
 </head>
 <body>
@@ -244,8 +286,22 @@ input:focus,select:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(45
 
   <div class="topbar">
     <div class="topbar-left">
-      <div class="topbar-wordmark">Village</div>
-      <div class="topbar-tagline">your circle of care</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <!-- Village logo mark: Option B — heart/care shape -->
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+          <rect width="36" height="36" rx="9" fill="#4C1D95"/>
+          <!-- Heart shape outer -->
+          <path d="M18 27 C4 18 4 8 18 13 C32 8 32 18 18 27Z" fill="#2E1065"/>
+          <!-- Heart shape inner highlight -->
+          <path d="M18 23 C8 16 8 10 18 14 C28 10 28 16 18 23Z" fill="#8B5CF6"/>
+          <!-- Person dot at top — the one being cared for -->
+          <circle cx="18" cy="9" r="3.5" fill="#EDE9FE"/>
+        </svg>
+        <div>
+          <div class="topbar-wordmark">Village</div>
+          <div class="topbar-tagline">your circle of care</div>
+        </div>
+      </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
       <button onclick="printToday()" id="print-btn" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 10px;cursor:pointer;color:rgba(255,255,255,.85);font-size:12px;font-family:inherit;white-space:nowrap">
@@ -298,41 +354,135 @@ input:focus,select:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(45
       Admin
     </button>
   </nav>
-</div>
 
-<div class="sheet-bg" id="sheet-bg">
-  <div class="sheet">
-    <div class="sheet-title" id="sheet-title"></div>
-    <button class="sheet-opt red" id="sheet-remove" onclick="sheetRemove()">Remove from today</button>
-    <button class="sheet-cancel" onclick="closeSheet()">Cancel</button>
+  <!-- ── LOCK SCREEN ─────────────────────────────────────── -->
+  <div id="lock-screen" style="
+    position:fixed;inset:0;z-index:9999;
+    background:#1C1917;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    padding:32px 24px;
+    touch-action:manipulation;
+  ">
+  <!-- Logo mark -->
+  <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:16px">
+    <rect width="72" height="72" rx="18" fill="#4C1D95"/>
+    <path d="M36 58 C10 43 10 18 36 28 C62 18 62 43 36 58Z" fill="#2E1065"/>
+    <path d="M36 50 C17 38 17 22 36 30 C55 22 55 38 36 50Z" fill="#8B5CF6"/>
+    <circle cx="36" cy="16" r="8" fill="#EDE9FE"/>
+  </svg>
+
+  <!-- Wordmark -->
+  <div style="font-size:28px;font-weight:800;color:#ffffff;letter-spacing:-0.03em;line-height:1">Village</div>
+  <div style="font-size:14px;color:#8B5CF6;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:300;margin-top:5px;letter-spacing:0.04em">your circle of care</div>
+
+  <!-- PIN prompt -->
+  <div style="margin-top:48px;text-align:center">
+    <div style="font-size:13px;color:#78716C;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:24px">Enter PIN to continue</div>
+
+    <!-- Dots -->
+    <div id="lock-dots" style="display:flex;gap:14px;justify-content:center;margin-bottom:8px">
+      <div id="lp0" style="width:13px;height:13px;border-radius:50%;border:2px solid #8B5CF6;transition:background .15s"></div>
+      <div id="lp1" style="width:13px;height:13px;border-radius:50%;border:2px solid #8B5CF6;transition:background .15s"></div>
+      <div id="lp2" style="width:13px;height:13px;border-radius:50%;border:2px solid #8B5CF6;transition:background .15s"></div>
+      <div id="lp3" style="width:13px;height:13px;border-radius:50%;border:2px solid #8B5CF6;transition:background .15s"></div>
+    </div>
+
+    <!-- Error message -->
+    <div id="lock-err" style="height:20px;font-size:13px;color:#C05621;margin-bottom:16px;text-align:center"></div>
+
+    <!-- PIN pad -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:240px;margin:0 auto">
+      <button ontouchstart="event.preventDefault();lockKey('1')" onclick="lockKey('1')" class="lk-btn">1</button>
+      <button ontouchstart="event.preventDefault();lockKey('2')" onclick="lockKey('2')" class="lk-btn">2</button>
+      <button ontouchstart="event.preventDefault();lockKey('3')" onclick="lockKey('3')" class="lk-btn">3</button>
+      <button ontouchstart="event.preventDefault();lockKey('4')" onclick="lockKey('4')" class="lk-btn">4</button>
+      <button ontouchstart="event.preventDefault();lockKey('5')" onclick="lockKey('5')" class="lk-btn">5</button>
+      <button ontouchstart="event.preventDefault();lockKey('6')" onclick="lockKey('6')" class="lk-btn">6</button>
+      <button ontouchstart="event.preventDefault();lockKey('7')" onclick="lockKey('7')" class="lk-btn">7</button>
+      <button ontouchstart="event.preventDefault();lockKey('8')" onclick="lockKey('8')" class="lk-btn">8</button>
+      <button ontouchstart="event.preventDefault();lockKey('9')" onclick="lockKey('9')" class="lk-btn">9</button>
+      <button ontouchstart="event.preventDefault();lockKey('del')" onclick="lockKey('del')" class="lk-btn" style="font-size:18px">⌫</button>
+      <button ontouchstart="event.preventDefault();lockKey('0')" onclick="lockKey('0')" class="lk-btn">0</button>
+      <button ontouchstart="event.preventDefault();lockKey('ok')" onclick="lockKey('ok')" class="lk-btn" style="font-size:13px;font-weight:700;color:#8B5CF6">OK</button>
+    </div>
   </div>
-</div>
+  </div><!-- end lock screen -->
 
-<div class="modal-bg" id="info-modal-bg">
-  <div class="modal" id="info-modal-content"></div>
+  <div class="modal-bg" id="info-modal-bg">
+    <div class="modal" id="info-modal-content"></div>
+  </div>
+
 </div>
+<!-- end #app -->
+
+<!-- print-content MUST be outside #app to avoid overflow:hidden clipping in iOS print -->
+<div id="print-content" style="display:none;background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a2e"></div>
+
+<style>
+.lk-btn{
+  padding:18px 0;
+  border:1px solid #2C2C2A;
+  border-radius:14px;
+  background:#242422;
+  color:#ffffff;
+  font-size:22px;
+  font-weight:400;
+  cursor:pointer;
+  font-family:'DM Sans',-apple-system,sans-serif;
+  transition:background .1s;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.lk-btn:active{background:#333330}
+</style>
 
 <script>
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const SMONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const SDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const CAT_LABELS={personal:'Personal care',nursery:'Nursery / boys room',kitchen:'Kitchen / food',medical:'Medical',home:'Home / cleaning',garden:'Garden / outdoors',admin:'Admin / paperwork',errands:'Errands / outings',christmas:'Christmas',extra:'Extra'};
-const CAT_ORDER=['medical','personal','nursery','kitchen','home','garden','admin','errands','christmas','extra'];
+const CAT_LABELS={personal:'Personal care',nursery:'Nursery / boys room',kitchen:'Kitchen / food',medical:'Medical',home:'Home / cleaning',garden:'Garden / outdoors',admin:'Admin / paperwork',errands:'Errands / outings',christmas:'Christmas',evening:'Evening',extra:'Extra'};
+const CAT_ORDER=['medical','personal','nursery','kitchen','home','garden','admin','errands','christmas','evening','extra'];
 const FREQ_LABELS={daily:'Every day',weekdays:'Weekdays','mon-wed-fri':'Mon/Wed/Fri','tue-thu':'Tue/Thu','weekly-mon':'Weekly (Mon)','weekly-wed':'Weekly (Wed)','weekly-fri':'Weekly (Fri)','as-needed':'As needed'};
 
-function todayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+function todayKey(){
+  const d=new Date();
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const dd=String(d.getDate()).padStart(2,'0');
+  return d.getFullYear()+'-'+mm+'-'+dd;
+}
+
+let _viewOffset=0; // 0=today, 1=tomorrow
+
+function viewKey(){
+  const d=new Date();
+  d.setDate(d.getDate()+_viewOffset);
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const dd=String(d.getDate()).padStart(2,'0');
+  return d.getFullYear()+'-'+mm+'-'+dd;
+}
+
+function viewLabel(){
+  if(_viewOffset===0)return'Today';
+  if(_viewOffset===1)return'Tomorrow';
+  return'Today';
+}
 function ls(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
-const HARDCODED_API_URL='https://script.google.com/macros/s/AKfycbzPEzh55je9LQ3Ioocg7eUl1Wd6grPWWvBWpdZUYcm6QaMtoYxuPUJD9llct_0TM0N9Iw/exec';
-function getApiUrl(){return ls('api_url','')||HARDCODED_API_URL}
+const HARDCODED_API_URL='https://script.google.com/macros/s/AKfycbzIbLVhCFq8P-VXUMH4Ac1KgZIUyEDMyNNdSN98E_yqJHCIMabrJVzne3a8m9ppPS3oZw/exec';
+// Clear any previously cached URL so the new deployment is always used
+if(ls('api_url','')!==HARDCODED_API_URL)lsSet('api_url','');
+function getApiUrl(){return HARDCODED_API_URL}
 function setApiUrl(u){lsSet('api_url',u)}
 function isAdminUnlocked(){return ls('admin_unlocked',false)}
 function setAdminUnlocked(v){lsSet('admin_unlocked',v)}
 function isEasyMode(){return ls('easy_mode',false)}
 
 // Fetch with timeout using Promise.race — avoids AbortSignal cloning issues on mobile
-function fetchWithTimeout(url,opts={},ms=12000){
+function fetchWithTimeout(url,opts={},ms=25000){
   const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('Request timed out')),ms));
   return Promise.race([fetch(url,opts),timeout]);
 }
@@ -349,11 +499,12 @@ async function apiPost(body){
   const d=await r.json();if(d.error)throw new Error(d.error);return d;
 }
 
-let state={tasks:[],checked:[],pickedExtras:[],freeExtras:[],sessionOverrides:{},settings:{}};
-let sheetId=null,sheetIsExtra=false,pinBuffer='';
+let state={tasks:[],sessions:[],checked:[],pickedExtras:[],freeExtras:[],sessionOverrides:{},hiddenToday:[],settings:{}};
+let appUnlocked=false; // declared here so all functions can reference it
+let pinBuffer='';
 
-function isScheduledToday(freq){
-  const d=new Date().getDay();
+function isScheduledToday(freq, date){
+  const d=(date||new Date()).getDay();
   if(freq==='daily')return true;
   if(freq==='weekdays')return d>=1&&d<=5;
   if(freq==='mon-wed-fri')return[1,3,5].includes(d);
@@ -372,6 +523,18 @@ function toggleEasyMode(){
   lsSet('easy_mode',next);
   document.getElementById('app').classList.toggle('easy-mode',next);
   document.getElementById('easy-sw').classList.toggle('on',next);
+  // Update print button size to match
+  const pb=document.getElementById('print-btn');
+  if(pb&&pb.style.display!=='none'){
+    pb.style.padding=next?'9px 16px':'6px 10px';
+    pb.style.fontSize=next?'13px':'12px';
+    pb.style.borderRadius=next?'20px':'8px';
+    pb.style.fontWeight=next?'600':'400';
+    pb.style.background=next?'rgba(82,183,136,0.25)':'rgba(255,255,255,.12)';
+    pb.style.border=next?'1px solid rgba(82,183,136,0.5)':'1px solid rgba(255,255,255,.2)';
+    pb.style.color=next?'#c8f0df':'rgba(255,255,255,.85)';
+    pb.style.letterSpacing=next?'.02em':'0';
+  }
 }
 
 function goScreen(name){
@@ -383,14 +546,27 @@ function goScreen(name){
   const titles={today:"Today's tasks",pick:'Pick tasks',log:'Daily log',admin:'Admin'};
   // title is rendered inside each screen, not in the topbar
   const pb=document.getElementById('print-btn');
-  if(pb)pb.style.display=name==='today'?'block':'none';
+  if(pb){
+    pb.style.display=name==='today'?'flex':'none';
+    const easy=isEasyMode();
+    pb.style.padding=easy?'9px 16px':'6px 10px';
+    pb.style.fontSize=easy?'13px':'12px';
+    pb.style.borderRadius=easy?'20px':'8px';
+    pb.style.fontWeight=easy?'600':'400';
+    pb.style.background=easy?'rgba(82,183,136,0.25)':'rgba(255,255,255,.12)';
+    pb.style.border=easy?'1px solid rgba(82,183,136,0.5)':'1px solid rgba(255,255,255,.2)';
+    pb.style.color=easy?'#c8f0df':'rgba(255,255,255,.85)';
+    pb.style.letterSpacing=easy?'.02em':'0';
+  }
   if(name==='today'){
-    if(state.tasks.length===0)loadToday();   // first ever load — show spinner
-    else{renderToday();refreshToday();}      // already have data — render instantly, sync silently
+    const wasOnTomorrow=_viewOffset!==0;
+    _viewOffset=0; // always reset to today when tapping Today tab
+    if(state.tasks.length===0||wasOnTomorrow)loadToday();
+    else{renderToday();if(!_saveExtrasPending&&_savesInFlight===0)refreshToday();}
   }
   if(name==='pick'){
     if(state.tasks.length===0)loadToday().then(()=>renderPick());
-    else{renderPick();refreshToday().then(()=>renderPick());}
+    else{renderPick();if(!_saveExtrasPending&&_savesInFlight===0)refreshToday().then(()=>renderPick());}
   }
   if(name==='log')loadLog();
   if(name==='admin')renderAdmin();
@@ -401,67 +577,83 @@ function goScreen(name){
 async function loadToday(){
   document.getElementById('today-inner').innerHTML=loading();
   try{
-    const[tr,cr,er,sr]=await Promise.all([
+    const[tr,sr_sess,cr,er,sr]=await Promise.all([
       api('getTasks'),
-      api('getChecked',{date:todayKey()}),
-      api('getExtras',{date:todayKey()}),
+      api('getSessions'),
+      api('getChecked',{date:viewKey()}),
+      api('getExtras',{date:viewKey()}),
       api('getSettings'),
     ]);
     state.tasks=tr.tasks||[];
+    state.sessions=sr_sess.sessions||[];
     state.checked=cr.ids||[];
     const extras=er.extras||[];
     const sentinel=extras.find(e=>e.id==='__picked__');
     state.pickedExtras=sentinel?(JSON.parse(sentinel.name||'[]')).map(String):[];
     const sessSentinel=extras.find(e=>e.id==='__session_overrides__');
     state.sessionOverrides=sessSentinel?JSON.parse(sessSentinel.name||'{}'):{};
+    const hiddenSentinel=extras.find(e=>e.id==='__hidden__');
+    state.hiddenToday=hiddenSentinel?(JSON.parse(hiddenSentinel.name||'[]')).map(String):[];
     state.freeExtras=extras.filter(e=>e.id&&e.id.startsWith('f_'));
     state.settings=sr.settings||{};
     renderToday();
   }catch(e){
-    document.getElementById('today-inner').innerHTML=`<div class="err-banner">Could not load tasks. Check your connection.<br><small>${e.message}</small></div>`;
+    document.getElementById('today-inner').innerHTML=`<div class="err-banner">Could not load tasks — Google may be slow to start up.<br><small>${e.message}</small><br><br><button onclick="loadToday()" style="margin-top:4px;padding:8px 16px;background:var(--forest);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Try again</button></div>`;
   }
 }
 
 // Silent background refresh — no spinner, only re-renders if data changed
 let _refreshing=false;
-let _lastWrite=0; // timestamp of last local write — blocks refresh for 5s after any change
+let _lastWrite=0;
+let _savesInFlight=0; // counts active saves — refresh blocked while any are pending
 
 function markWritten(){_lastWrite=Date.now();}
+function beginSave(){_savesInFlight++;markWritten();}
+function endSave(){if(_savesInFlight>0)_savesInFlight--;}
 async function refreshToday(){
   if(_refreshing||!getApiUrl())return;
-  if(Date.now()-_lastWrite<8000)return; // don't overwrite a recent local change
+  if(_savesInFlight>0)return; // a save is still in progress — don't overwrite local state
+  if(Date.now()-_lastWrite<15000)return; // grace period after last write — covers slow Apps Script
   _refreshing=true;
   try{
-    const[tr,cr,er,sr]=await Promise.all([
+    const[tr,sr_sess,cr,er,sr]=await Promise.all([
       api('getTasks'),
-      api('getChecked',{date:todayKey()}),
-      api('getExtras',{date:todayKey()}),
+      api('getSessions'),
+      api('getChecked',{date:viewKey()}),
+      api('getExtras',{date:viewKey()}),
       api('getSettings'),
     ]);
     const newTasks=tr.tasks||[];
+    const newSessions=sr_sess.sessions||[];
     const newChecked=cr.ids||[];
     const extras=er.extras||[];
     const sentinel=extras.find(e=>e.id==='__picked__');
     const newPicked=sentinel?(JSON.parse(sentinel.name||'[]')).map(String):[];
     const sessSentinel=extras.find(e=>e.id==='__session_overrides__');
     const newOverrides=sessSentinel?JSON.parse(sessSentinel.name||'{}'):{};
+    const hiddenSentinel=extras.find(e=>e.id==='__hidden__');
+    const newHidden=hiddenSentinel?(JSON.parse(hiddenSentinel.name||'[]')).map(String):[];
     const newFree=extras.filter(e=>e.id&&e.id.startsWith('f_'));
     const newSettings=sr.settings||{};
 
     // Only update state + re-render if something actually changed
     const changed=
       JSON.stringify(newTasks)!==JSON.stringify(state.tasks)||
+      JSON.stringify(newSessions)!==JSON.stringify(state.sessions)||
       JSON.stringify(newChecked)!==JSON.stringify(state.checked)||
       JSON.stringify(newPicked)!==JSON.stringify(state.pickedExtras)||
       JSON.stringify(newOverrides)!==JSON.stringify(state.sessionOverrides)||
+      JSON.stringify(newHidden)!==JSON.stringify(state.hiddenToday)||
       JSON.stringify(newFree)!==JSON.stringify(state.freeExtras)||
       JSON.stringify(newSettings)!==JSON.stringify(state.settings);
 
     if(changed){
       state.tasks=newTasks;
+      state.sessions=newSessions;
       state.checked=newChecked;
       state.pickedExtras=newPicked;
       state.sessionOverrides=newOverrides;
+      state.hiddenToday=newHidden;
       state.freeExtras=newFree;
       state.settings=newSettings;
       // Re-render whichever screen is currently active
@@ -482,7 +674,7 @@ async function refreshToday(){
 
 // Green pulse = synced successfully, orange dot = last sync failed (offline/slow)
 function showSyncPulse(){
-  showStatusDot('#1D9E75');  // green
+  showStatusDot('#6D28D9');  // green
 }
 function showOfflineDot(){
   showStatusDot('#C05621');  // ember/orange
@@ -506,12 +698,26 @@ setInterval(()=>{
 },30000);
 
 // Refresh when user returns to the tab after being away
-document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='visible'&&getApiUrl()){
-    // Delay refresh by 2s so any pending saves finish before we fetch from Sheets
-    setTimeout(()=>refreshToday(),2000);
+// visibility change handled by lock screen above
+
+async function switchView(offset){
+  if(_viewOffset===offset)return;
+  // Flush any pending saves for the current view before switching
+  if(_saveExtrasTimer){
+    clearTimeout(_saveExtrasTimer);
+    _saveExtrasTimer=null;
+    const sentinel={id:'__picked__',name:JSON.stringify(state.pickedExtras),cat:'',note:''};
+    const sessSentinel={id:'__session_overrides__',name:JSON.stringify(state.sessionOverrides),cat:'',note:''};
+    const hiddenSentinel={id:'__hidden__',name:JSON.stringify(state.hiddenToday),cat:'',note:''};
+    const free=state.freeExtras.map(e=>({...e}));
+    try{await apiPost({action:'setExtras',date:viewKey(),extras:[sentinel,sessSentinel,hiddenSentinel,...free]})}
+    catch(e){console.warn('switchView flush failed:',e.message)}
+    _saveExtrasPending=false;
+    endSave();
   }
-});
+  _viewOffset=offset;
+  loadToday();
+}
 
 function getPickedTaskObjects(){
   return state.pickedExtras
@@ -521,20 +727,37 @@ function getPickedTaskObjects(){
 
 function renderToday(){
   const now=new Date();
-  const dateStr=DAYS[now.getDay()]+', '+now.getDate()+' '+MONTHS[now.getMonth()];
+  const viewDate=new Date();
+  viewDate.setDate(viewDate.getDate()+_viewOffset);
+  const dateStr=DAYS[viewDate.getDay()]+', '+viewDate.getDate()+' '+MONTHS[viewDate.getMonth()];
+  const isTomorrow=_viewOffset===1;
   const xmasOn=state.settings.christmasMode==='true';
-  const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn));
-  const dailyTasks=active.filter(t=>isScheduledToday(t.freq)&&t.freq!=='as-needed');
+  const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn))
+    .sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
+  const dailyTasks=active.filter(t=>isScheduledToday(t.freq,viewDate)&&t.freq!=='as-needed');
   const pickedTasks=getPickedTaskObjects();
-  const allToday=[...dailyTasks,...pickedTasks,...state.freeExtras];
-  const total=allToday.length;
-  const done=allToday.filter(t=>state.checked.includes(t.id)).length;
+  const activeSessIds=new Set(state.sessions.filter(s=>s.active!==false).map(s=>s.id));
+  const allToday=[...dailyTasks,...pickedTasks,...state.freeExtras]
+    .filter(t=>!state.hiddenToday.includes(String(t.id)));
+  // Only count tasks that are actually visible (in active sessions or unassigned shown)
+  const visibleToday=allToday.filter(t=>{
+    const sid=getEffectiveSession(t);
+    return sid==='unset'||activeSessIds.has(sid);
+  });
+  const total=visibleToday.length;
+  const done=visibleToday.filter(t=>state.checked.includes(t.id)).length;
   const pct=total?Math.round(done/total*100):0;
 
   let html=`
   <div style="padding:18px 16px 4px">
     <div style="font-size:13px;color:var(--pebble);font-weight:500">${dateStr}</div>
-    <div style="font-size:22px;font-weight:700;color:var(--stone);margin-top:2px">Today's tasks</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px">
+      <div style="font-size:22px;font-weight:700;color:var(--stone)">Today's tasks</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="switchView(0)" ontouchstart="event.preventDefault();switchView(0)" style="padding:6px 14px;border-radius:20px;border:1.5px solid ${!isTomorrow?'var(--forest)':'var(--linen)'};background:${!isTomorrow?'var(--forest)':'transparent'};color:${!isTomorrow?'#fff':'var(--driftwood)'};font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Today</button>
+        <button onclick="switchView(1)" ontouchstart="event.preventDefault();switchView(1)" style="padding:6px 14px;border-radius:20px;border:1.5px solid ${isTomorrow?'var(--forest)':'var(--linen)'};background:${isTomorrow?'var(--forest)':'transparent'};color:${isTomorrow?'#fff':'var(--driftwood)'};font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Tomorrow</button>
+      </div>
+    </div>
   </div>
   <div class="progress-card">
     <div class="prog-row">
@@ -548,62 +771,129 @@ function renderToday(){
     <button onclick="loadToday()" style="background:none;border:none;font-size:12px;color:var(--pebble);cursor:pointer;font-family:inherit;padding:4px 0">&#8635; Refresh</button>
   </div>`;
 
-  // Daily tasks grouped by category
-  const dailyGroups={};
-  dailyTasks.forEach(t=>(dailyGroups[t.cat]=dailyGroups[t.cat]||[]).push(t));
-  let hasDailyContent=false;
-  CAT_ORDER.forEach(cat=>{
-    if(!dailyGroups[cat])return;
-    hasDailyContent=true;
-    html+=`<div class="sec-label">${CAT_LABELS[cat]||cat}</div>`;
-    dailyGroups[cat].forEach(t=>html+=taskCardHtml(t));
+  // Group tasks by session, ordered by session start time
+  const currentSessId=getCurrentSessionId();
+  const sessionGroups={};
+  allToday.forEach(t=>{
+    const sid=getEffectiveSession(t);
+    if(!sessionGroups[sid])sessionGroups[sid]=[];
+    sessionGroups[sid].push(t);
   });
-  if(!hasDailyContent)html+=`<div class="empty" style="padding:24px 20px">No daily tasks scheduled today.</div>`;
 
-  // Picked extras
-  if(pickedTasks.length||state.freeExtras.length){
-    html+=`<div class="sec-label" style="color:var(--deep-forest)">Added for today</div>`;
-    const pickedGroups={};
-    pickedTasks.forEach(t=>(pickedGroups[t.cat]=pickedGroups[t.cat]||[]).push(t));
-    CAT_ORDER.forEach(cat=>{
-      if(!pickedGroups[cat])return;
-      pickedGroups[cat].forEach(t=>html+=taskCardHtml(t,true));
+  // Render sessions in time order, then unassigned at the end
+  // Only show active sessions
+  const orderedSessions=[...state.sessions]
+    .filter(s=>s.active!==false)
+    .sort((a,b)=>a.sortOrder-b.sortOrder);
+  orderedSessions.forEach(sess=>{
+    const tasks=sessionGroups[sess.id]||[];
+    if(!tasks.length)return;
+    const isCurrent=sess.id===currentSessId;
+    const timeStr=sess.startTime&&sess.endTime?` <span style="font-size:10px;font-weight:400;opacity:.7">${sess.startTime}–${sess.endTime}</span>`:'';
+    const currentBadge=isCurrent?` <span style="font-size:10px;font-weight:700;color:var(--forest);background:var(--mist);padding:2px 8px;border-radius:20px;margin-left:6px">NOW</span>`:'';
+    html+=`<div class="sec-label" style="color:var(--driftwood)">${sess.emoji} ${sess.name}${timeStr}${currentBadge}</div>`;
+    tasks.forEach(t=>{
+      const isExtra=!isScheduledToday(t.freq)||t.freq==='as-needed'||String(t.id).startsWith('f_');
+      html+=taskCardHtml(t,isExtra);
     });
-    state.freeExtras.forEach(t=>html+=taskCardHtml(t,true));
+  });
+
+  // Unassigned tasks at the bottom
+  const unassigned=sessionGroups['unset']||[];
+  if(unassigned.length){
+    html+=`<div class="sec-label" style="color:var(--pebble)">📋 Unassigned</div>`;
+    unassigned.forEach(t=>{
+      const isExtra=!isScheduledToday(t.freq)||t.freq==='as-needed'||String(t.id).startsWith('f_');
+      html+=taskCardHtml(t,isExtra);
+    });
   }
 
-  // Prompt to pick if nothing added yet
-  if(!pickedTasks.length&&!state.freeExtras.length){
-    html+=`<div style="margin:8px 14px 0;padding:16px 18px;background:var(--white);border-radius:var(--card-radius);border:1px dashed var(--linen);text-align:center">
-      <div style="font-size:14px;color:var(--driftwood);margin-bottom:12px">Want to add extra tasks for today?</div>
-      <button onclick="goScreen('pick')" style="padding:10px 22px;background:var(--forest);color:#fff;border:none;border-radius:18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Pick tasks</button>
-    </div>`;
-  }
+  if(!allToday.length)html+=`<div class="empty" style="padding:24px 20px">No tasks scheduled today.</div>`;
+
+  // Pick tasks prompt at the bottom
+  html+=`<div style="margin:12px 14px 8px;padding:14px 18px;background:var(--white);border-radius:var(--card-radius);border:1px dashed var(--linen);text-align:center">
+    <div style="font-size:13px;color:var(--driftwood);margin-bottom:10px">Add extra tasks for today</div>
+    <button onclick="goScreen('pick')" style="padding:9px 20px;background:var(--forest);color:#fff;border:none;border-radius:18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Pick tasks</button>
+  </div>`;
 
   document.getElementById('today-inner').innerHTML=html;
+  initSwipe();
 }
 
-// Returns today's override if set, otherwise the task's default session
+// Migration map from old hardcoded strings to new session IDs
+const SESSION_MIGRATION={'morning':'s_morning','lunchtime':'s_lunchtime','afternoon':'s_afternoon','evening':'s_evening'};
+
+function migrateSessionId(val){
+  if(!val||val==='unset')return'unset';
+  // Already a proper session ID (starts with s_)
+  if(state.sessions.some(s=>s.id===val))return val;
+  // Try hardcoded migration map
+  if(SESSION_MIGRATION[val])return SESSION_MIGRATION[val];
+  // Try matching by session name (case-insensitive) as last resort
+  const byName=state.sessions.find(s=>s.name.toLowerCase()===val.toLowerCase());
+  if(byName)return byName.id;
+  return'unset';
+}
+
+function getSessionById(id){
+  return state.sessions.find(s=>s.id===id)||null;
+}
+
 function getEffectiveSession(t){
-  return state.sessionOverrides[String(t.id)] || t.session || 'unset';
+  const raw=state.sessionOverrides[String(t.id)]||t.session||'unset';
+  return migrateSessionId(raw);
+}
+
+function getSessionLabel(id){
+  const s=getSessionById(id);
+  return s?`${s.emoji} ${s.name}`:'Unassigned';
+}
+
+function getCurrentSessionId(){
+  // Find which session we're currently in based on time of day
+  const now=new Date();
+  const mins=now.getHours()*60+now.getMinutes();
+  const sorted=[...state.sessions].sort((a,b)=>a.sortOrder-b.sortOrder);
+  for(const s of sorted){
+    const [sh,sm]=s.startTime.split(':').map(Number);
+    const [eh,em]=s.endTime.split(':').map(Number);
+    const start=sh*60+sm, end=eh*60+em;
+    if(mins>=start&&mins<end)return s.id;
+  }
+  return null;
+}
+
+function hideTaskToday(id){
+  const sid=String(id);
+  if(!state.hiddenToday.includes(sid))state.hiddenToday.push(sid);
+  markWritten();
+  renderToday();
+  saveExtras();
+}
+
+function initSwipe(){
+  // Wait for DOM to fully paint before attaching touch listeners
+  requestAnimationFrame(()=>initTodayDrag());
 }
 
 function taskCardHtml(t,isExtra=false){
   const isDone=state.checked.includes(t.id);
+  const isHidden=state.hiddenToday.includes(String(t.id));
+  if(isHidden)return''; // hidden for today
   const note=t.note?`<div class="task-note">${t.note}</div>`:'';
-  const menuBtn=isExtra
-    ?`<button class="menu-btn" onclick="event.stopPropagation();openSheet('${t.id}','${t.name.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">&#8943;</button>`
-    :'';
-  const infoBtn=`<button class="info-btn" onclick="event.stopPropagation();openInfoModal('${t.id}')" title="More info">ⓘ</button>`;
+  const infoBtn=`<button class="info-btn" ontouchstart="event.stopPropagation();event.preventDefault();openInfoModal('${t.id}')" onclick="event.stopPropagation();openInfoModal('${t.id}')" title="More info">ⓘ</button>`;
+  const removeBtn=`<button class="remove-btn" onclick="event.stopPropagation();hideTaskToday('${t.id}')" title="Hide today">×</button>`;
   const effSess=getEffectiveSession(t);
-  const sessBadge=effSess&&effSess!=='unset'?`<span class="sess-badge sess-${effSess}">${{lunchtime:'🕛 Lunchtime',afternoon:'🌤 Afternoon',both:'↕ Both'}[effSess]||''}</span>`:'';
-  return`<div class="task-card${isDone?' done':''}">
-    <div class="task-row" onclick="toggleTask('${t.id}')">
-      <div class="tick${isDone?' on':''}"><svg width="14" height="14" viewBox="0 0 14 14"><polyline points="2,7 5.5,10.5 12,3" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  const sessObj=getSessionById(effSess);
+  const sessBadge=sessObj?`<span class="sess-badge sess-dynamic" style="background:#F5F3FF;color:#3C3489">${sessObj.emoji} ${sessObj.name}</span>`:'';
+  return`<div class="task-card${isDone?' done':''}" data-id="${t.id}">
+    <div class="task-row">
+      <div class="drag-handle" title="Hold to reorder">⠿</div>
+      <div class="tick${isDone?' on':''}" onclick="toggleTask('${t.id}')" ontouchstart="event.stopPropagation();event.preventDefault();toggleTask('${t.id}')" style="cursor:pointer;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 14 14"><polyline points="2,7 5.5,10.5 12,3" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="task-info">
         <div class="task-name">${t.name}</div>
         <span class="task-badge cat-${t.cat||'extra'}">${CAT_LABELS[t.cat]||t.cat||'Extra'}</span>${sessBadge}
-      </div>${infoBtn}${menuBtn}
+      </div>${infoBtn}${removeBtn}
     </div>${note}</div>`;
 }
 
@@ -612,13 +902,16 @@ async function toggleTask(id){
   if(idx>-1)state.checked.splice(idx,1);else state.checked.push(id);
   markWritten();
   renderToday();
-  try{await apiPost({action:'setChecked',date:todayKey(),ids:state.checked});await saveLogEntry()}catch(e){console.error(e)}
+  beginSave();
+  try{await apiPost({action:'setChecked',date:viewKey(),ids:state.checked});await saveLogEntry()}
+  catch(e){console.error(e)}
+  finally{endSave()}
 }
 
 async function saveLogEntry(){
   const xmasOn=state.settings.christmasMode==='true';
   const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn));
-  const dailyTasks=active.filter(t=>isScheduledToday(t.freq)&&t.freq!=='as-needed');
+  const dailyTasks=active.filter(t=>isScheduledToday(t.freq,new Date(Date.now()+_viewOffset*86400000))&&t.freq!=='as-needed');
   const picked=getPickedTaskObjects();
   const all=[...dailyTasks,...picked,...state.freeExtras];
   await apiPost({action:'saveLog',entry:{date:todayKey(),done:all.filter(t=>state.checked.includes(t.id)).map(t=>t.name),total:all.length}});
@@ -629,7 +922,7 @@ function renderPick(){
   const xmasOn=state.settings.christmasMode==='true';
   const pickable=state.tasks.filter(t=>
     t.active&&
-    (t.freq==='as-needed'||!isScheduledToday(t.freq))&&
+    (t.freq==='as-needed'||!isScheduledToday(t.freq,new Date(Date.now()+_viewOffset*86400000)))&&
     (t.cat!=='christmas'||xmasOn)
   );
 
@@ -658,7 +951,7 @@ function renderPick(){
           <div class="pick-item-name">${t.name}</div>
           <div class="pick-item-cat">${CAT_LABELS[t.cat]||t.cat} · ${FREQ_LABELS[t.freq]||t.freq}</div>
         </div>
-        <button class="info-btn" onclick="event.stopPropagation();openInfoModal('${t.id}')" title="More info">ⓘ</button>
+        <button class="info-btn" ontouchstart="event.stopPropagation();event.preventDefault();openInfoModal('${t.id}')" onclick="event.stopPropagation();openInfoModal('${t.id}')" title="More info">ⓘ</button>
       </div>`;
     });
     html+='</div>';
@@ -701,35 +994,32 @@ function addFreeTask(){
 }
 
 let _saveExtrasTimer=null;
+let _saveExtrasPending=false; // true while debounce is waiting or save is in flight
+
 function saveExtras(){
-  // Debounce -- only fire after 400ms of no further changes
+  markWritten();
+  // Mark as pending immediately so refresh is blocked
+  if(!_saveExtrasPending){
+    _saveExtrasPending=true;
+    _savesInFlight++;
+  }
+  // Debounce — reset the timer on each call, fire once things settle
   clearTimeout(_saveExtrasTimer);
   _saveExtrasTimer=setTimeout(async()=>{
     const sentinel={id:'__picked__',name:JSON.stringify(state.pickedExtras),cat:'',note:''};
     const sessSentinel={id:'__session_overrides__',name:JSON.stringify(state.sessionOverrides),cat:'',note:''};
+    const hiddenSentinel={id:'__hidden__',name:JSON.stringify(state.hiddenToday),cat:'',note:''};
     const free=state.freeExtras.map(e=>({...e}));
-    try{await apiPost({action:'setExtras',date:todayKey(),extras:[sentinel,sessSentinel,...free]})}
+    try{await apiPost({action:'setExtras',date:viewKey(),extras:[sentinel,sessSentinel,hiddenSentinel,...free]})}
     catch(e){console.error('saveExtras failed:',e)}
+    finally{
+      _saveExtrasPending=false;
+      endSave();
+    }
   },400);
 }
 
 // ── SHEET (remove extra from today) ───────────────────────────
-function openSheet(id,name){
-  sheetId=id;
-  document.getElementById('sheet-title').textContent=name;
-  document.getElementById('sheet-bg').classList.add('open');
-}
-function closeSheet(){document.getElementById('sheet-bg').classList.remove('open')}
-function sheetRemove(){
-  const isPicked=state.pickedExtras.includes(sheetId);
-  if(isPicked){state.pickedExtras=state.pickedExtras.filter(id=>id!==sheetId);}
-  else{state.freeExtras=state.freeExtras.filter(e=>e.id!==sheetId);}
-  closeSheet();
-  renderToday();         // instant
-  saveExtras();          // background
-}
-document.getElementById('sheet-bg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeSheet()});
-
 // ── LOG ───────────────────────────────────────────────────────
 async function loadLog(){
   document.getElementById('log-content').innerHTML=loading();
@@ -739,14 +1029,26 @@ async function loadLog(){
 function renderLog(entries){
   if(!entries.length){document.getElementById('log-content').innerHTML='<div class="empty">No log entries yet.<br>Completed tasks appear here automatically.</div>';return}
   let html='';
+  // Deduplicate by date — keep the entry with the most tasks done
+  const byDate={};
   entries.forEach(entry=>{
-    const p=entry.date.split('-');
-    const d=new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));
+    const key=entry.date;
+    if(!byDate[key]||entry.done.length>byDate[key].done.length)byDate[key]=entry;
+  });
+  const deduped=Object.values(byDate).sort((a,b)=>b.date.localeCompare(a.date));
+  deduped.forEach(entry=>{
+    // Parse date robustly — handles YYYY-M-D and YYYY-MM-DD
+    let d;
+    const p=String(entry.date).match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if(p){d=new Date(parseInt(p[1]),parseInt(p[2])-1,parseInt(p[3]));}
+    else{d=new Date(entry.date);}
+    const isValid=d instanceof Date&&!isNaN(d);
+    const dateLabel=isValid?`${SDAYS[d.getDay()]} ${d.getDate()} ${SMONTHS[d.getMonth()]} ${d.getFullYear()}`:entry.date;
     const pct=entry.total?Math.round(entry.done.length/entry.total*100):0;
     const tags=entry.done.slice(0,5).map(n=>`<span class="log-tag">${n}</span>`).join('');
     const more=entry.done.length>5?`<span class="log-tag">+${entry.done.length-5} more</span>`:'';
     html+=`<div class="log-card">
-      <div class="log-datestr">${SDAYS[d.getDay()]} ${d.getDate()} ${SMONTHS[d.getMonth()]} ${d.getFullYear()}</div>
+      <div class="log-datestr">${dateLabel}</div>
       <div class="log-summary">${entry.done.length} of ${entry.total} tasks done — ${pct}%</div>
       <div class="log-prog"><div class="log-prog-fill" style="width:${pct}%"></div></div>
       <div class="log-tags">${tags}${more}</div>
@@ -815,47 +1117,108 @@ async function checkPin(){
   }catch(e){const el=document.getElementById('pin-err');if(el)el.textContent='Connection error.'}
 }
 async function renderAdminContent(){
-  document.getElementById('admin-inner').innerHTML=loading();
+  // Render immediately from current state — no loading screen
+  _renderAdminHTML();
+  // Fetch fresh tasks/settings in background and re-render if changed
   try{
     const[tr,sr]=await Promise.all([api('getTasks'),api('getSettings')]);
-    state.tasks=tr.tasks||[];state.settings=sr.settings||{};
-  }catch(e){document.getElementById('admin-inner').innerHTML=`<div class="err-banner">Could not load. ${e.message}</div>`;return}
+    const changed=
+      JSON.stringify(tr.tasks||[])!==JSON.stringify(state.tasks)||
+      JSON.stringify(sr.settings||{})!==JSON.stringify(state.settings);
+    if(changed){
+      state.tasks=tr.tasks||[];
+      state.settings=sr.settings||{};
+      const adminEl=document.getElementById('scr-admin');
+      const scrollTop=adminEl?.scrollTop||0;
+      _renderAdminHTML();
+      requestAnimationFrame(()=>{if(adminEl)adminEl.scrollTop=scrollTop;});
+    }
+  }catch(e){console.warn('Admin background refresh failed:',e.message)}
+}
+
+function _renderAdminHTML(){
   const xmasOn=state.settings.christmasMode==='true';
   const groups={};
-  state.tasks.forEach(t=>(groups[t.cat]=groups[t.cat]||[]).push(t));
+  // Sort tasks by sortOrder field, then build category groups
+  const sorted=[...state.tasks].sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
+  sorted.forEach(t=>(groups[t.cat]=groups[t.cat]||[]).push(t));
   let listHtml='';
   CAT_ORDER.forEach(cat=>{
     if(!groups[cat])return;
     listHtml+=`<div class="sec-label" style="padding-left:0;padding-top:8px">${CAT_LABELS[cat]||cat}</div>`;
     groups[cat].forEach(t=>{
-      const sessLabels={lunchtime:'🕛 Lunchtime',afternoon:'🌤 Afternoon',both:'↕ Both',unset:''};
-      const sessBadgeHtml=t.session&&t.session!=='unset'?`<span class="task-badge sess-badge sess-${t.session}" style="margin-left:0;margin-top:3px">${sessLabels[t.session]}</span>`:'';
-      const descPreview=t.desc?`<div style="font-size:11px;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px">${t.desc}</div>`:'';
-      listHtml+=`<div class="master-item${t.active?'':' inactive'}">
-        <div class="master-item-info" style="flex:1;min-width:0">
+      const sessLabels={unset:'No session'};
+      state.sessions.forEach(s=>sessLabels[s.id]=`${s.emoji} ${s.name}`);
+      const taskSessId=migrateSessionId(t.session||'unset');
+      const descPreview=t.desc?`<div style="font-size:11px;color:var(--pebble);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.desc}</div>`:'';
+      const sessOptions=state.sessions.map(s=>`<option value="${s.id}"${taskSessId===s.id?' selected':''}>${s.emoji} ${s.name}</option>`).join('');
+      listHtml+=`<div class="master-item${t.active?'':' inactive'}" data-id="${t.id}">
+        <div class="master-item-info">
           <div class="master-item-name">${t.name}</div>
           <div class="master-freq">${FREQ_LABELS[t.freq]||t.freq}</div>
-          ${sessBadgeHtml}${descPreview}
+          <div style="margin-top:6px">
+            <select class="sess-select" onchange="updateTaskSession('${t.id}',this.value)" title="Assign session">
+              <option value="unset"${taskSessId==='unset'?' selected':''}>No session</option>
+              ${sessOptions}
+            </select>
+          </div>
+          ${descPreview}
         </div>
-        <select class="sess-select" onchange="updateTaskSession('${t.id}',this.value)" title="Assign session">
-          <option value="unset"${(!t.session||t.session==='unset')?' selected':''}>Session</option>
-          <option value="lunchtime"${t.session==='lunchtime'?' selected':''}>🕛 Lunchtime</option>
-          <option value="afternoon"${t.session==='afternoon'?' selected':''}>🌤 Afternoon</option>
-          <option value="both"${t.session==='both'?' selected':''}>↕ Both</option>
-        </select>
-        <button class="tog-btn" style="padding:4px 8px;font-size:11px" onclick="openDescEdit('${t.id}')" title="Edit notes">📝</button>
-        <button class="tog-btn${t.active?' on':''}" onclick="toggleActive('${t.id}')">${t.active?'On':'Off'}</button>
-        <button class="del-btn" onclick="deleteTask('${t.id}')">×</button>
+        <div class="master-item-controls">
+          <button class="tog-btn" style="padding:4px 8px;font-size:13px" onclick="openDescEdit('${t.id}')" title="Edit notes">📝</button>
+          <button class="tog-btn${t.active?' on':''}" ontouchstart="event.preventDefault();toggleActive('${t.id}')" onclick="toggleActive('${t.id}')">${t.active?'On':'Off'}</button>
+          <button class="del-btn" onclick="deleteTask('${t.id}')">×</button>
+        </div>
       </div>`;
     });
   });
   document.getElementById('admin-inner').innerHTML=`
   <div class="admin-wrap">
+    <div class="card" id="sessions-card">
+      <h3>Sessions</h3>
+      ${state.sessions.length?state.sessions.sort((a,b)=>a.sortOrder-b.sortOrder).map(s=>`
+        <div class="master-item" style="align-items:flex-start;padding:14px 0">
+          <span style="font-size:22px;margin-right:6px;margin-top:2px">${s.emoji}</span>
+          <div class="master-item-info">
+            <div class="master-item-name" style="${s.active===false?'color:var(--pebble);text-decoration:line-through':''}">${s.name}</div>
+            <div class="master-freq">${s.startTime} – ${s.endTime}</div>
+            <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
+              <input type="text" placeholder="Carer name (optional)" value="${s.carerName||''}"
+                style="flex:1;padding:7px 10px;font-size:13px;border:1px solid var(--linen);border-radius:8px;background:var(--white);color:var(--stone);font-family:inherit"
+                onchange="updateCarerName('${s.id}',this.value)"
+                onblur="updateCarerName('${s.id}',this.value)">
+            </div>
+          </div>
+          <div class="master-item-controls" style="margin-top:2px">
+            <button class="toggle-sw-light${s.active!==false?' on':''}" ontouchstart="event.preventDefault();toggleSessionActive('${s.id}')" onclick="toggleSessionActive('${s.id}')" title="${s.active!==false?'Active — tap to deactivate':'Inactive — tap to activate'}"></button>
+            <button class="del-btn" ontouchstart="event.preventDefault();deleteSessionAdmin('${s.id}')" onclick="deleteSessionAdmin('${s.id}')" title="Delete session">×</button>
+          </div>
+        </div>`).join(''):'<div style="font-size:13px;color:var(--pebble);padding:8px 0">No sessions yet.</div>'}
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--linen)">
+        <div style="font-size:12px;font-weight:700;color:var(--pebble);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">Add session</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input type="text" id="sess-emoji" placeholder="Emoji" maxlength="4" style="width:64px;text-align:center;font-size:20px;padding:8px">
+          <input type="text" id="sess-name" placeholder="Session name" style="flex:1">
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <div style="flex:1">
+            <label class="fl" style="margin-top:0">Start time</label>
+            <input type="time" id="sess-start" style="width:100%">
+          </div>
+          <div style="flex:1">
+            <label class="fl" style="margin-top:0">End time</label>
+            <input type="time" id="sess-end" style="width:100%">
+          </div>
+        </div>
+        <button class="btn btn-primary" ontouchstart="event.preventDefault();addSessionAdmin()" onclick="addSessionAdmin()">Add session</button>
+        <div id="sess-flash" class="flash"></div>
+      </div>
+    </div>
     <div class="card">
       <h3>Seasonal settings</h3>
       <div class="xmas-row">
         <div><div class="xmas-label">Christmas mode</div><div class="xmas-sub">Shows Christmas tasks (Nov–Feb)</div></div>
-        <button class="toggle-sw${xmasOn?' on':''}" id="xmas-toggle" onclick="toggleXmas()"></button>
+        <button class="toggle-sw-light${xmasOn?' on':''}" id="xmas-toggle" ontouchstart="event.preventDefault();toggleXmas()" onclick="toggleXmas()"></button>
       </div>
     </div>
     <div class="card"><h3>All tasks</h3>${listHtml||'<div style="color:var(--text3);font-size:14px">No tasks.</div>'}</div>
@@ -872,6 +1235,7 @@ async function renderAdminContent(){
           <option value="garden">Garden / outdoors</option>
           <option value="admin">Admin / paperwork</option>
           <option value="errands">Errands / outings</option>
+          <option value="evening">Evening</option>
           <option value="christmas">Christmas</option>
         </select>
         <select id="new-freq">
@@ -899,19 +1263,173 @@ async function renderAdminContent(){
     <div class="card"><button class="btn btn-danger" onclick="resetToday()">Reset today's checklist</button></div>
   </div>`;
 }
+
+// ── DRAG TO REORDER (Today view, touch-first for iOS) ─────────
+let _drag={id:null,el:null,ghost:null,offsetY:0,lastTarget:null};
+let _dragListenersAdded=false;
+
+function initTodayDrag(){
+  // Attach touchstart to each drag handle
+  document.querySelectorAll('#today-inner .task-card[data-id]').forEach(el=>{
+    const handle=el.querySelector('.drag-handle');
+    if(!handle)return;
+
+    // Clone and replace to remove stale listeners from previous renders
+    const newHandle=handle.cloneNode(true);
+    handle.parentNode.replaceChild(newHandle,handle);
+
+    newHandle.addEventListener('touchstart',e=>{
+      e.stopPropagation();
+      e.preventDefault();
+      const t=e.touches[0];
+      _startDrag(el,t.clientX,t.clientY);
+    },{passive:false});
+
+    newHandle.addEventListener('mousedown',e=>{
+      e.preventDefault();
+      _startDrag(el,e.clientX,e.clientY);
+      const onMove=ev=>{ev.preventDefault();_moveDrag(ev.clientX,ev.clientY)};
+      const onUp=()=>{
+        _endDrag();
+        window.removeEventListener('mousemove',onMove);
+        window.removeEventListener('mouseup',onUp);
+      };
+      window.addEventListener('mousemove',onMove);
+      window.addEventListener('mouseup',onUp);
+    });
+  });
+
+  // Add document-level touch listeners only once ever
+  if(!_dragListenersAdded){
+    _dragListenersAdded=true;
+    document.addEventListener('touchmove',e=>{
+      if(!_drag.el)return;
+      e.preventDefault();
+      _moveDrag(e.touches[0].clientX,e.touches[0].clientY);
+    },{passive:false});
+    document.addEventListener('touchend',e=>{
+      if(!_drag.el)return;
+      _endDrag();
+    },{passive:false});
+    document.addEventListener('touchcancel',e=>{
+      if(!_drag.el)return;
+      // Clean up without reordering
+      if(_drag.ghost)_drag.ghost.remove();
+      if(_drag.el)_drag.el.style.opacity='';
+      document.querySelectorAll('.task-card').forEach(c=>c.classList.remove('drag-over'));
+      _drag={id:null,el:null,ghost:null,offsetY:0,lastTarget:null};
+    },{passive:false});
+  }
+}
+
+function _startDrag(el,clientX,clientY){
+  _drag.id=el.dataset.id;
+  _drag.el=el;
+  _drag.lastTarget=null;
+
+  const rect=el.getBoundingClientRect();
+  _drag.offsetY=clientY-rect.top;
+
+  // Create ghost clone that follows finger
+  const ghost=el.cloneNode(true);
+  ghost.style.cssText=`
+    position:fixed;
+    left:${rect.left}px;
+    top:${rect.top}px;
+    width:${rect.width}px;
+    opacity:0.9;
+    z-index:9990;
+    pointer-events:none;
+    border-radius:22px;
+    box-shadow:0 12px 32px rgba(0,0,0,.25);
+    transition:none;
+    background:#fff;
+    transform:scale(1.02);
+  `;
+  document.body.appendChild(ghost);
+  _drag.ghost=ghost;
+  el.style.opacity='0.3';
+}
+
+function _moveDrag(clientX,clientY){
+  if(!_drag.ghost||!_drag.el)return;
+
+  // Move ghost
+  _drag.ghost.style.top=(clientY-_drag.offsetY)+'px';
+
+  // Hit test — hide ghost briefly so it doesn't block the test
+  _drag.ghost.style.display='none';
+  const target=document.elementFromPoint(clientX,clientY);
+  _drag.ghost.style.display='';
+
+  // Walk up from target to find a task card
+  const targetCard=target?.closest?.('#today-inner .task-card[data-id]');
+
+  document.querySelectorAll('#today-inner .task-card').forEach(c=>c.classList.remove('drag-over'));
+
+  if(targetCard&&targetCard!==_drag.el){
+    targetCard.classList.add('drag-over');
+    _drag.lastTarget=targetCard.dataset.id;
+  }
+}
+
+function _endDrag(){
+  if(_drag.ghost)_drag.ghost.remove();
+  if(_drag.el)_drag.el.style.opacity='';
+  document.querySelectorAll('#today-inner .task-card').forEach(c=>c.classList.remove('drag-over'));
+
+  const fromId=_drag.id;
+  const toId=_drag.lastTarget;
+  _drag={id:null,el:null,ghost:null,offsetY:0,lastTarget:null};
+
+  if(toId&&toId!==fromId){
+    reorderTask(fromId,toId);
+  }
+}
+
+async function reorderTask(fromId,toId){
+  const sorted=[...state.tasks].sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
+  const fromIdx=sorted.findIndex(t=>String(t.id)===String(fromId));
+  const toIdx=sorted.findIndex(t=>String(t.id)===String(toId));
+  if(fromIdx===-1||toIdx===-1){console.warn('reorder: task not found',fromId,toId);return;}
+  const [moved]=sorted.splice(fromIdx,1);
+  sorted.splice(toIdx,0,moved);
+  sorted.forEach((t,i)=>t.sortOrder=i);
+  state.tasks=sorted;
+  markWritten();   // block background refresh immediately
+  beginSave();     // count as in-flight so refresh waits for completion
+  renderToday();
+  try{
+    await apiPost({action:'reorderTasks',order:sorted.map(t=>t.id)});
+  }catch(e){console.error('reorder save failed:',e)}
+  finally{endSave()}
+}
 async function toggleXmas(){
   const next=String(!(state.settings.christmasMode==='true'));
   try{await apiPost({action:'saveSetting',key:'christmasMode',value:next});state.settings.christmasMode=next;renderAdminContent()}
   catch(e){alert('Error: '+e.message)}
 }
 async function toggleActive(id){
-  try{const r=await apiPost({action:'toggleTask',id});const t=state.tasks.find(t=>t.id===id);if(t)t.active=r.active;renderAdminContent()}
-  catch(e){alert('Error: '+e.message)}
+  const adminEl=document.getElementById('scr-admin');
+  const scrollTop=adminEl?.scrollTop||0;
+  try{
+    const r=await apiPost({action:'toggleTask',id});
+    const t=state.tasks.find(t=>t.id===id);
+    if(t)t.active=r.active;
+    renderAdminContent();
+    requestAnimationFrame(()=>{if(adminEl)adminEl.scrollTop=scrollTop;});
+  }catch(e){alert('Error: '+e.message)}
 }
 async function deleteTask(id){
   if(!confirm('Remove this task permanently?'))return;
-  try{await apiPost({action:'deleteTask',id});state.tasks=state.tasks.filter(t=>t.id!==id);renderAdminContent()}
-  catch(e){alert('Error: '+e.message)}
+  const adminEl=document.getElementById('scr-admin');
+  const scrollTop=adminEl?.scrollTop||0;
+  try{
+    await apiPost({action:'deleteTask',id});
+    state.tasks=state.tasks.filter(t=>t.id!==id);
+    renderAdminContent();
+    requestAnimationFrame(()=>{if(adminEl)adminEl.scrollTop=scrollTop;});
+  }catch(e){alert('Error: '+e.message)}
 }
 async function addTask(){
   const name=document.getElementById('new-name').value.trim();if(!name)return;
@@ -930,6 +1448,66 @@ async function changePin(){
   catch(e){alert('Error: '+e.message)}
 }
 function adminLock(){setAdminUnlocked(false);renderPin()}
+
+async function updateCarerName(id, name){
+  const s=state.sessions.find(s=>s.id===id);
+  if(!s)return;
+  s.carerName=name;
+  try{await apiPost({action:'updateSession',id,field:'carerName',value:name});}
+  catch(e){console.error('Error saving carer name:',e.message)}
+}
+
+async function toggleSessionActive(id){
+  const s=state.sessions.find(s=>s.id===id);
+  if(!s)return;
+  const next=s.active===false?'Yes':'No';
+  s.active=next==='Yes';
+  // Save scroll position before re-render
+  const adminScroll=document.getElementById('scr-admin')?.scrollTop||0;
+  renderAdminContent();
+  // Restore scroll position after render
+  requestAnimationFrame(()=>{
+    const adminEl=document.getElementById('scr-admin');
+    if(adminEl)adminEl.scrollTop=adminScroll;
+  });
+  try{
+    await apiPost({action:'updateSession',id,field:'active',value:next});
+  }catch(e){
+    console.error('Error saving session active state:',e.message);
+  }
+}
+
+async function addSessionAdmin(){
+  const emoji=document.getElementById('sess-emoji')?.value.trim();
+  const name=document.getElementById('sess-name')?.value.trim();
+  const startTime=document.getElementById('sess-start')?.value;
+  const endTime=document.getElementById('sess-end')?.value;
+  if(!name){alert('Please enter a session name.');return}
+  if(!emoji){alert('Please enter an emoji.');return}
+  if(!startTime||!endTime){alert('Please set start and end times.');return}
+  try{
+    const r=await apiPost({action:'addSession',session:{name,emoji,startTime,endTime}});
+    if(r.ok){
+      state.sessions.push({id:r.id,name,emoji,startTime,endTime,sortOrder:state.sessions.length,active:true});
+      showFlash('sess-flash');
+      setTimeout(()=>renderAdminContent(),800);
+    }
+  }catch(e){alert('Error adding session: '+e.message)}
+}
+
+async function deleteSessionAdmin(id){
+  const sess=state.sessions.find(s=>s.id===id);
+  if(!sess)return;
+  if(!confirm(`Delete "${sess.name}"? Tasks assigned to this session will become unassigned.`))return;
+  try{
+    await apiPost({action:'deleteSession',id});
+    state.sessions=state.sessions.filter(s=>s.id!==id);
+    // Unassign tasks locally
+    state.tasks.forEach(t=>{if(migrateSessionId(t.session||'unset')===id)t.session='unset'});
+    renderAdminContent();
+    renderToday();
+  }catch(e){alert('Error deleting session: '+e.message)}
+}
 
 async function updateTaskSession(id,session){
   try{
@@ -968,7 +1546,7 @@ async function resetToday(){
   if(!confirm('Reset all ticks and picked tasks for today?'))return;
   try{
     await Promise.all([apiPost({action:'setChecked',date:todayKey(),ids:[]}),apiPost({action:'setExtras',date:todayKey(),extras:[]})]);
-    state.checked=[];state.pickedExtras=[];state.freeExtras=[];state.sessionOverrides={};
+    state.checked=[];state.pickedExtras=[];state.freeExtras=[];state.sessionOverrides={};state.hiddenToday=[];
     alert('Today reset.');
   }catch(e){alert('Error: '+e.message)}
 }
@@ -976,26 +1554,91 @@ async function resetToday(){
 
 // ── PRINT ─────────────────────────────────────────────────────
 function printToday(){
-  const now=new Date();
-  const dateStr=DAYS[now.getDay()]+' '+now.getDate()+' '+MONTHS[now.getMonth()]+' '+now.getFullYear();
+  // Show session picker before printing
   const xmasOn=state.settings.christmasMode==='true';
   const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn));
-  const dailyTasks=active.filter(t=>isScheduledToday(t.freq)&&t.freq!=='as-needed');
+  const dailyTasks=active.filter(t=>isScheduledToday(t.freq,new Date(Date.now()+_viewOffset*86400000))&&t.freq!=='as-needed');
   const pickedTasks=getPickedTaskObjects();
-  const allToday=[...dailyTasks,...pickedTasks,...state.freeExtras];
+  const allToday=[...dailyTasks,...pickedTasks,...state.freeExtras]
+    .filter(t=>!state.hiddenToday.includes(String(t.id)));
 
   if(!allToday.length){alert('No tasks to print for today.');return}
 
-  // Split into session buckets using today's effective session (override → default)
-  // 'both' tasks appear in both sections
-  const lunchtime=allToday.filter(t=>{const s=getEffectiveSession(t);return s==='lunchtime'||s==='both'});
-  const afternoon=allToday.filter(t=>{const s=getEffectiveSession(t);return s==='afternoon'||s==='both'});
-  const unassigned=allToday.filter(t=>{const s=getEffectiveSession(t);return !s||s==='unset'});
+  // Work out which sessions have tasks today
+  const orderedSess=[...state.sessions]
+    .filter(s=>s.active!==false)
+    .sort((a,b)=>a.sortOrder-b.sortOrder);
+  const sessionsWithTasks=orderedSess.filter(s=>
+    allToday.some(t=>getEffectiveSession(t)===s.id)
+  );
+  const hasUnassigned=allToday.some(t=>getEffectiveSession(t)==='unset');
+
+  // Build picker modal
+  const sessionRows=sessionsWithTasks.map(s=>`
+    <label style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:1.5px solid var(--linen);border-radius:12px;background:var(--white);cursor:pointer;font-size:15px;color:var(--stone)">
+      <input type="checkbox" value="${s.id}" checked style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0">
+      <span style="font-size:18px">${s.emoji}</span>
+      <span style="flex:1;font-weight:500">${s.name}</span>
+      <span style="font-size:12px;color:var(--pebble)">${allToday.filter(t=>getEffectiveSession(t)===s.id).length} tasks</span>
+    </label>`).join('');
+
+  const unassignedRow=hasUnassigned?`
+    <label style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:1.5px solid var(--linen);border-radius:12px;background:var(--white);cursor:pointer;font-size:15px;color:var(--stone)">
+      <input type="checkbox" value="unset" checked style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0">
+      <span style="font-size:18px">📋</span>
+      <span style="flex:1;font-weight:500">Unassigned</span>
+      <span style="font-size:12px;color:var(--pebble)">${allToday.filter(t=>getEffectiveSession(t)==='unset').length} tasks</span>
+    </label>`:'';
+
+  document.getElementById('info-modal-content').innerHTML=`
+    <div class="modal-title">Print today's tasks</div>
+    <div class="modal-cat" style="margin-bottom:16px">Select which sessions to include</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+      ${sessionRows}${unassignedRow}
+    </div>
+    <button class="modal-close" ontouchstart="event.preventDefault();doPrint()" onclick="doPrint()" style="margin-bottom:8px">🖨 Print selected</button>
+    <button onclick="closeInfoModal()" ontouchstart="event.preventDefault();closeInfoModal()" style="width:100%;padding:13px;border:1px solid var(--linen);border-radius:14px;background:var(--parchment);color:var(--driftwood);font-size:15px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>`;
+
+  document.getElementById('info-modal-bg').classList.add('open');
+}
+
+function doPrint(){
+  // Read selected sessions from checkboxes
+  const checked=[...document.querySelectorAll('#info-modal-content input[type=checkbox]:checked')].map(cb=>cb.value);
+  closeInfoModal();
+  if(!checked.length){alert('Please select at least one session.');return}
+  printWithSessions(checked);
+}
+
+function printWithSessions(selectedSessions){
+  const now=new Date();
+  const viewDate=new Date(Date.now()+_viewOffset*86400000);
+  const dateStr=DAYS[viewDate.getDay()]+' '+viewDate.getDate()+' '+MONTHS[viewDate.getMonth()]+' '+viewDate.getFullYear();
+  const xmasOn=state.settings.christmasMode==='true';
+  const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn));
+  const dailyTasks=active.filter(t=>isScheduledToday(t.freq,new Date(Date.now()+_viewOffset*86400000))&&t.freq!=='as-needed');
+  const pickedTasks=getPickedTaskObjects();
+  const allToday=[...dailyTasks,...pickedTasks,...state.freeExtras]
+    .filter(t=>!state.hiddenToday.includes(String(t.id)));
+
+  if(!allToday.length){alert('No tasks to print for today.');return}
+
+  // Group by dynamic sessions ordered by time, filtered to selected only
+  const printSessions=[...state.sessions]
+    .filter(s=>selectedSessions.includes(s.id))
+    .sort((a,b)=>a.sortOrder-b.sortOrder);
+  const printGroups={unset:[]};
+  printSessions.forEach(s=>printGroups[s.id]=[]);
+  allToday.forEach(t=>{
+    const sid=getEffectiveSession(t);
+    if(printGroups[sid])printGroups[sid].push(t);
+    else if(selectedSessions.includes('unset'))printGroups['unset'].push(t);
+  });
 
   function taskRow(t){
     const isDone=state.checked.includes(t.id);
     const checkbox=isDone
-      ?`<div style="width:18px;height:18px;background:#2D6A4F;border:1.5px solid #2D6A4F;border-radius:3px;margin-top:1px;display:flex;align-items:center;justify-content:center">
+      ?`<div style="width:18px;height:18px;background:#4C1D95;border:1.5px solid #4C1D95;border-radius:3px;margin-top:1px;display:flex;align-items:center;justify-content:center">
           <svg width="11" height="11" viewBox="0 0 11 11"><polyline points="1.5,5.5 4,8.5 9.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>`
       :`<div style="width:18px;height:18px;border:1.5px solid #9ca3af;border-radius:3px;margin-top:1px"></div>`;
@@ -1012,24 +1655,25 @@ function printToday(){
     </tr>`;
   }
 
-  function sectionBlock(label,emoji,colour,tasks){
+  function sectionBlock(label,emoji,colour,tasks,carerName){
     if(!tasks.length)return'';
     const doneCnt=tasks.filter(t=>state.checked.includes(t.id)).length;
     const remaining=tasks.length-doneCnt;
     const countLabel=doneCnt>0
       ?`${remaining} remaining · ${doneCnt} done`
       :`${tasks.length} task${tasks.length!==1?'s':''}`;
+    const carerLine=carerName?` <span style="font-weight:400;color:#6b7280">— Thanks, ${carerName}</span>`:'';
     return`
-      <div style="margin-bottom:24px">
-        <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:${colour};border-radius:8px 8px 0 0;border:1px solid #e5e7eb;border-bottom:none">
+      <div class="print-session-block" style="margin-bottom:24px">
+        <div class="print-session-header" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:${colour};border-radius:8px 8px 0 0;border:1px solid #e5e7eb;border-bottom:none">
           <span style="font-size:16px">${emoji}</span>
-          <span style="font-size:14px;font-weight:700;color:#1a1a2e;letter-spacing:.02em">${label}</span>
+          <span style="font-size:14px;font-weight:700;color:#1a1a2e;letter-spacing:.02em">${label}${carerLine}</span>
           <span style="margin-left:auto;font-size:12px;color:#6b7280">${countLabel}</span>
         </div>
         <table style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb;border-radius:0 0 8px 8px;overflow:hidden">
           ${tasks.map(taskRow).join('')}
         </table>
-        <div style="margin-top:10px;padding:8px 14px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;color:#9ca3af;display:flex;justify-content:space-between">
+        <div class="print-signoff" style="margin-top:10px;padding:8px 14px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;color:#9ca3af;display:flex;justify-content:space-between">
           <span>Carer: ___________________________</span>
           <span>Time: ____________</span>
           <span>Signature: ___________________________</span>
@@ -1038,87 +1682,113 @@ function printToday(){
   }
 
   const total=allToday.length;
-  const body=
-    sectionBlock('Lunchtime','🕛','#FFFBEB',lunchtime)+
-    sectionBlock('Afternoon','🌤','#EFF6FF',afternoon)+
-    (unassigned.length?sectionBlock('Unassigned','📋','#F3F4F6',unassigned):'');
+  const body=printSessions
+    .filter(s=>printGroups[s.id]&&printGroups[s.id].length)
+    .map(s=>sectionBlock(s.name,s.emoji,'#FAFAFA',printGroups[s.id],s.carerName||''))
+    .join('')+
+    (printGroups['unset'].length?sectionBlock('Unassigned','📋','#F3F4F6',printGroups['unset'],''):'');
 
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <title>Daily Care Tasks — ${dateStr}</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;color:#1a1a2e;padding:28px 32px}
-    @media print{.no-print{display:none!important}body{padding:16px 20px}@page{margin:1.2cm;size:A4}}
-    .back-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px}
-    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#f5f7fa;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;color:#1a1a2e;cursor:pointer;font-family:inherit;font-weight:500}
-    .back-btn:hover{background:#eef1f5}
-    .print-btn-bar{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#1a1a2e;border:none;border-radius:8px;font-size:13px;color:#fff;cursor:pointer;font-family:inherit;font-weight:500}
-  </style>
-  </head><body>
-  <div class="back-bar no-print">
-    <button class="back-btn" onclick="window.close()">← Back to app</button>
-    <button class="print-btn-bar" onclick="window.print()">🖨 Print / Save PDF</button>
-  </div>
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #1a1a2e">
-    <div>
-      <div style="font-size:22px;font-weight:700;color:#1a1a2e">Daily Care Tasks</div>
-      <div style="font-size:14px;color:#6b7280;margin-top:4px">${dateStr}</div>
+  // Write content into the permanent print div (always in DOM — iOS renders it before print)
+  const printDiv=document.getElementById('print-content');
+  printDiv.innerHTML=`
+    <div class="no-print" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;padding:20px 28px 0">
+      <button id="print-back-btn" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#f5f7fa;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;color:#1a1a2e;cursor:pointer;font-family:inherit;font-weight:500">← Back to app</button>
+      <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#1a1a2e;border:none;border-radius:8px;font-size:13px;color:#fff;cursor:pointer;font-family:inherit;font-weight:500">🖨 Print / Save PDF</button>
     </div>
-    <div style="text-align:right">
-      <div style="font-size:13px;color:#6b7280">${total} tasks today</div>
-      <div style="font-size:11px;color:#9ca3af;margin-top:4px">Printed ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}</div>
-    </div>
-  </div>
-  ${body}
-  <script>window.onload=function(){window.print()}<\/script>
-  </body></html>`;
+    <div style="padding:20px 28px 28px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #1a1a2e">
+        <div>
+          <div style="font-size:22px;font-weight:700;color:#1a1a2e">Daily Care Tasks</div>
+          <div style="font-size:14px;color:#6b7280;margin-top:4px">${dateStr}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:13px;color:#6b7280">${total} tasks today</div>
+          <div style="font-size:11px;color:#9ca3af;margin-top:4px">Printed ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}</div>
+        </div>
+      </div>
+      ${body}
+    </div>`;
 
-  const w=window.open('','_blank','width=800,height=900');
-  markWritten(); // prevent visibility-change refresh from overwriting state when user returns
-  if(!w){alert('Please allow popups for this site to enable printing.');return}
-  w.document.write(html);
-  w.document.close();
+  // Show the print content and hide the app
+  printDiv.style.display='block';
+  document.getElementById('app').style.display='none';
+  markWritten();
+
+  // Wire up back button
+  document.getElementById('print-back-btn').addEventListener('click',()=>{
+    printDiv.style.display='none';
+    printDiv.innerHTML='';
+    document.getElementById('app').style.display='';
+  });
+
+  // Wait two frames for layout then print
+  // Content is already in the DOM so iOS can render it fully
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      window.print();
+    });
+  });
 }
 
 // ── INFO MODAL ────────────────────────────────────────────────
+function setAppContentInteractive(on){
+  // Target only the content area and nav — never the lock screen itself
+  ['scr-today','scr-pick','scr-log','scr-admin','.bottom-nav'].forEach(sel=>{
+    const el=sel.startsWith('.')?document.querySelector(sel):document.getElementById(sel);
+    if(el)el.style.pointerEvents=on?'':'none';
+  });
+}
+
+let _infoLastFire=0;
 function openInfoModal(id){
-  const t=state.tasks.find(t=>String(t.id)===String(id));
+  const now=Date.now();
+  if(now-_infoLastFire<300)return;
+  _infoLastFire=now;
+  // Look in both regular tasks and free extras
+  const t=state.tasks.find(t=>String(t.id)===String(id))
+    ||state.freeExtras.find(t=>String(t.id)===String(id));
   if(!t)return;
   renderInfoModal(id);
-  document.getElementById('info-modal-bg').classList.add('open');
+  const bg=document.getElementById('info-modal-bg');
+  if(bg)bg.classList.add('open');
 }
 
 function renderInfoModal(id){
-  const t=state.tasks.find(t=>String(t.id)===String(id));
+  const t=state.tasks.find(t=>String(t.id)===String(id))
+    ||state.freeExtras.find(t=>String(t.id)===String(id));
   if(!t)return;
   const effSess=getEffectiveSession(t);
   const isOverridden=!!state.sessionOverrides[String(t.id)];
-  const defaultSess=t.session||'unset';
+  const defaultSessId=migrateSessionId(t.session||'unset');
+  const defaultSessObj=getSessionById(defaultSessId);
 
+  // Build toggle buttons from live sessions
   const sessOptions=[
-    {val:'lunchtime',label:'Lunchtime',emoji:'🕛',cls:'sess-lunchtime'},
-    {val:'afternoon',label:'Afternoon',emoji:'🌤',cls:'sess-afternoon'},
-    {val:'both',label:'Both',emoji:'↕',cls:'sess-both'},
-    {val:'unset',label:'Unassigned',emoji:'○',cls:'sess-unset'},
+    ...state.sessions.filter(s=>s.active!==false).map(s=>({val:s.id,label:s.name,emoji:s.emoji})),
+    {val:'unset',label:'Unassigned',emoji:'○'}
   ];
 
   const toggleBtns=sessOptions.map(o=>`
     <button onclick="setSessionOverride('${id}','${o.val}')"
-      style="flex:1;padding:10px 4px;border:2px solid ${effSess===o.val?'#1D9E75':'#e5e7eb'};border-radius:10px;background:${effSess===o.val?'#E1F5EE':'var(--bg2)'};cursor:pointer;font-family:inherit;font-size:12px;font-weight:${effSess===o.val?'700':'400'};color:${effSess===o.val?'#0F6E56':'var(--text2)'};transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px">
-      <span style="font-size:18px">${o.emoji}</span>
-      <span>${o.label}</span>
+      ontouchstart="event.preventDefault();setSessionOverride('${id}','${o.val}')"
+      style="width:100%;padding:13px 16px;border:1.5px solid ${effSess===o.val?'#6D28D9':'var(--linen)'};border-radius:12px;background:${effSess===o.val?'#EDE9FE':'var(--white)'};cursor:pointer;font-family:inherit;font-size:15px;font-weight:${effSess===o.val?'600':'400'};color:${effSess===o.val?'#3B0764':'var(--stone)'};transition:all .15s;display:flex;align-items:center;gap:12px;text-align:left;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <span style="font-size:20px;width:28px;text-align:center">${o.emoji}</span>
+      <span style="flex:1">${o.label}</span>
+      ${effSess===o.val?'<span style="color:#6D28D9;font-size:16px">✓</span>':''}
     </button>`).join('');
 
   const overrideNote=isOverridden
-    ?`<div style="font-size:11px;color:#0F6E56;background:#E1F5EE;border-radius:6px;padding:5px 10px;margin-top:8px;display:inline-block">Today's override — resets tomorrow</div>`
-    :(defaultSess!=='unset'?`<div style="font-size:11px;color:var(--text3);margin-top:6px">Default: ${{lunchtime:'🕛 Lunchtime',afternoon:'🌤 Afternoon',both:'↕ Both'}[defaultSess]||defaultSess}</div>`:'');
+    ?`<div style="font-size:11px;color:#3B0764;background:#EDE9FE;border-radius:6px;padding:5px 10px;margin-top:8px;display:inline-block">Today's override — resets tomorrow</div>`
+    :(defaultSessObj?`<div style="font-size:11px;color:var(--text3);margin-top:6px">Default: ${defaultSessObj.emoji} ${defaultSessObj.name}</div>`:
+      defaultSessId==='unset'?'':
+      `<div style="font-size:11px;color:var(--text3);margin-top:6px">Default: ${defaultSessId}</div>`);;
 
   document.getElementById('info-modal-content').innerHTML=`
     <div class="modal-title">${t.name}</div>
     <div class="modal-cat">${CAT_LABELS[t.cat]||t.cat||'Extra'}</div>
     <div style="height:16px"></div>
     <div class="modal-section-label">Session</div>
-    <div style="display:flex;gap:8px;margin-top:8px">${toggleBtns}</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">${toggleBtns}</div>
     ${overrideNote}
     ${t.desc?`<div style="height:16px"></div>
     <div class="modal-section-label">Notes &amp; instructions</div>
@@ -1138,15 +1808,106 @@ async function setSessionOverride(id,session){
   saveExtras();         // persist to Sheets in background
 }
 function closeInfoModal(){document.getElementById('info-modal-bg').classList.remove('open')}
-document.addEventListener('DOMContentLoaded',()=>{
+// Wire up info modal background tap-to-close
+(function(){
   const bg=document.getElementById('info-modal-bg');
   if(bg)bg.addEventListener('click',e=>{if(e.target===bg)closeInfoModal()});
+})();
+
+// ── LOCK SCREEN ───────────────────────────────────────────────
+const LOCK_PIN='2512';
+let lockBuffer='';
+
+let _lockKeyLastFire=0;
+function lockKey(k){
+  // Debounce to prevent touchstart+click double-fire on iOS
+  const now=Date.now();
+  if(now-_lockKeyLastFire<300)return;
+  _lockKeyLastFire=now;
+  if(k==='del'){
+    lockBuffer=lockBuffer.slice(0,-1);
+  } else if(k==='ok'){
+    checkLockPin();
+    return;
+  } else if(lockBuffer.length<4){
+    lockBuffer+=k;
+  }
+  updateLockDots();
+  if(lockBuffer.length===4)setTimeout(checkLockPin,120);
+}
+
+function updateLockDots(){
+  for(let i=0;i<4;i++){
+    const dot=document.getElementById('lp'+i);
+    if(dot){
+      dot.style.background=i<lockBuffer.length?'#8B5CF6':'transparent';
+    }
+  }
+}
+
+function checkLockPin(){
+  if(lockBuffer===LOCK_PIN){
+    appUnlocked=true;
+    // Restore touch interaction to app content
+    setAppContentInteractive(true);
+    const ls=document.getElementById('lock-screen');
+    if(ls){
+      ls.style.opacity='0';
+      ls.style.transition='opacity .3s ease';
+      setTimeout(()=>{ls.style.display='none'},300);
+    }
+    lockBuffer='';
+    updateLockDots();
+  } else {
+    const err=document.getElementById('lock-err');
+    if(err){
+      err.textContent='Incorrect PIN — try again';
+      setTimeout(()=>{err.textContent=''},2000);
+    }
+    lockBuffer='';
+    updateLockDots();
+    // Shake the dots
+    const dots=document.getElementById('lock-dots');
+    if(dots){
+      dots.style.transform='translateX(8px)';
+      setTimeout(()=>{dots.style.transform='translateX(-8px)'},80);
+      setTimeout(()=>{dots.style.transform='translateX(0)'},160);
+    }
+  }
+}
+
+let _printWindowOpen=false; // kept for safety — no longer triggers popup
+
+// Re-lock whenever the user leaves the app
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){
+    // Don't re-lock if we just opened the print popup
+    if(_printWindowOpen){_printWindowOpen=false;return;} // legacy flag, kept for safety
+    appUnlocked=false;
+    lockBuffer='';
+    closeInfoModal(); // close any open modal before locking
+    const ls=document.getElementById('lock-screen');
+    if(ls){
+      ls.style.opacity='1';
+      ls.style.display='flex';
+      updateLockDots();
+      const err=document.getElementById('lock-err');
+      if(err)err.textContent='';
+      setAppContentInteractive(false);
+    }
+  }
+  // Normal sync refresh when returning (only if unlocked)
+  if(document.visibilityState==='visible'&&getApiUrl()&&appUnlocked){
+    markWritten();
+    refreshToday();
+  }
 });
 
 // ── INIT ──────────────────────────────────────────────────────
 const easyOn=isEasyMode();
 document.getElementById('app').classList.toggle('easy-mode',easyOn);
 document.getElementById('easy-sw').classList.toggle('on',easyOn);
+setAppContentInteractive(false); // locked on load
 const now=new Date();
 // date is rendered inside renderToday, not in the topbar
 if(!getApiUrl())goScreen('admin');else goScreen('today');
