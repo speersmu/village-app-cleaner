@@ -455,7 +455,19 @@ function todayKey(){
   return d.getFullYear()+'-'+mm+'-'+dd;
 }
 
-let _viewOffset=0; // 0=today, 1=tomorrow
+let _viewOffset=0; // 0=today (used for reset), will be overridden by getCleanerDayOffset
+
+// Returns the number of days until the next occurrence of a given weekday (0=Sun,1=Mon...6=Sat)
+// If today is that day, returns 0 (show today's date for that day)
+function daysUntilWeekday(targetDay){
+  const today=new Date().getDay();
+  const diff=(targetDay-today+7)%7;
+  return diff===0?0:diff;
+}
+
+// Get offset for next Wednesday (3) or Friday (5)
+function wedOffset(){return daysUntilWeekday(3)||7;} // if today is Wed, show next Wed
+function friOffset(){return daysUntilWeekday(5)||7;} // if today is Fri, show next Fri
 
 function viewKey(){
   const d=new Date();
@@ -466,8 +478,6 @@ function viewKey(){
 }
 
 function viewLabel(){
-  if(_viewOffset===0)return'Today';
-  if(_viewOffset===1)return'Tomorrow';
   return'Today';
 }
 function ls(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}}
@@ -559,9 +569,9 @@ function goScreen(name){
     pb.style.letterSpacing=easy?'.02em':'0';
   }
   if(name==='today'){
-    const wasOnTomorrow=_viewOffset!==0;
-    _viewOffset=0; // always reset to today when tapping Today tab
-    if(state.tasks.length===0||wasOnTomorrow)loadToday();
+    const wasOnOtherDay=_viewOffset!==0;
+    _viewOffset=0;
+    if(state.tasks.length===0||wasOnOtherDay)loadToday();
     else{renderToday();if(!_saveExtrasPending&&_savesInFlight===0)refreshToday();}
   }
   if(name==='pick'){
@@ -730,7 +740,7 @@ function renderToday(){
   const viewDate=new Date();
   viewDate.setDate(viewDate.getDate()+_viewOffset);
   const dateStr=DAYS[viewDate.getDay()]+', '+viewDate.getDate()+' '+MONTHS[viewDate.getMonth()];
-  const isTomorrow=_viewOffset===1;
+  const isTomorrow=_viewOffset!==0;
   const xmasOn=state.settings.christmasMode==='true';
   const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn))
     .sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
@@ -748,14 +758,22 @@ function renderToday(){
   const done=visibleToday.filter(t=>state.checked.includes(t.id)).length;
   const pct=total?Math.round(done/total*100):0;
 
+  // Build Wednesday and Friday date labels
+  const wedDate=new Date();wedDate.setDate(wedDate.getDate()+wedOffset());
+  const friDate=new Date();friDate.setDate(friDate.getDate()+friOffset());
+  const wedLabel=`Wed ${wedDate.getDate()} ${MONTHS[wedDate.getMonth()]}`;
+  const friLabel=`Fri ${friDate.getDate()} ${MONTHS[friDate.getMonth()]}`;
+  const isWed=_viewOffset===wedOffset();
+  const isFri=_viewOffset===friOffset();
+
   let html=`
   <div style="padding:18px 16px 4px">
     <div style="font-size:13px;color:var(--pebble);font-weight:500">${dateStr}</div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px">
-      <div style="font-size:22px;font-weight:700;color:var(--stone)">Today's tasks</div>
+      <div style="font-size:22px;font-weight:700;color:var(--stone)">${isTomorrow||isWed||isFri?'Planned tasks':'Today\'s tasks'}</div>
       <div style="display:flex;gap:6px">
-        <button onclick="switchView(0)" ontouchstart="event.preventDefault();switchView(0)" style="padding:6px 14px;border-radius:20px;border:1.5px solid ${!isTomorrow?'var(--forest)':'var(--linen)'};background:${!isTomorrow?'var(--forest)':'transparent'};color:${!isTomorrow?'#fff':'var(--driftwood)'};font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Today</button>
-        <button onclick="switchView(1)" ontouchstart="event.preventDefault();switchView(1)" style="padding:6px 14px;border-radius:20px;border:1.5px solid ${isTomorrow?'var(--forest)':'var(--linen)'};background:${isTomorrow?'var(--forest)':'transparent'};color:${isTomorrow?'#fff':'var(--driftwood)'};font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Tomorrow</button>
+        <button onclick="switchView(wedOffset())" ontouchstart="event.preventDefault();switchView(wedOffset())" style="padding:6px 12px;border-radius:20px;border:1.5px solid ${isWed?'var(--forest)':'var(--linen)'};background:${isWed?'var(--forest)':'transparent'};color:${isWed?'#fff':'var(--driftwood)'};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;white-space:nowrap">${wedLabel}</button>
+        <button onclick="switchView(friOffset())" ontouchstart="event.preventDefault();switchView(friOffset())" style="padding:6px 12px;border-radius:20px;border:1.5px solid ${isFri?'var(--forest)':'var(--linen)'};background:${isFri?'var(--forest)':'transparent'};color:${isFri?'#fff':'var(--driftwood)'};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;white-space:nowrap">${friLabel}</button>
       </div>
     </div>
   </div>
