@@ -130,6 +130,8 @@ html,body{height:100%;overflow:hidden;background:var(--parchment);font-family:'D
 .cat-landing{background:#CCFBF1;color:#0F766E}
 .cat-utility{background:#FFF7ED;color:#C2410C}
 .cat-kitchencons{background:#DCFCE7;color:#166534}
+.cat-diningroom{background:#FEF9C3;color:#854D0E}
+.cat-outside{background:#ECFDF5;color:#065F46}
 /* drag handle */
 .drag-handle{color:var(--linen);cursor:grab;padding:6px 2px 6px 0;font-size:16px;line-height:1;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none;min-width:20px;text-align:center}
 .drag-handle:active{cursor:grabbing;color:var(--pebble)}
@@ -453,8 +455,8 @@ const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturda
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const SMONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const SDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const CAT_LABELS={personal:'Personal care',nursery:'Nursery / boys room',kitchen:'Kitchen / food',medical:'Medical',home:'Home / cleaning',garden:'Garden / outdoors',admin:'Admin / paperwork',errands:'Errands / outings',christmas:'Christmas',evening:'Evening',extra:'Extra',bathroom:'Bathroom',bedroom:'Bedroom',hallway:'Hallway',livingroom:'Living room',stairs:'Stairs',landing:'Landing',utility:'Utility room',kitchencons:'Kitchen / conservatory'};
-const CAT_ORDER=['medical','personal','nursery','kitchen','home','garden','admin','errands','christmas','evening','bathroom','bedroom','hallway','livingroom','stairs','landing','utility','kitchencons','extra'];
+const CAT_LABELS={personal:'Personal care',nursery:'Nursery / boys room',kitchen:'Kitchen / food',medical:'Medical',home:'Home / cleaning',garden:'Garden / outdoors',admin:'Admin / paperwork',errands:'Errands / outings',christmas:'Christmas',evening:'Evening',extra:'Extra',bathroom:'Bathroom',bedroom:'Bedroom',hallway:'Hallway',livingroom:'Living room',stairs:'Stairs',landing:'Landing',utility:'Utility room',kitchencons:'Kitchen / conservatory',diningroom:'Dining room',outside:'Outside'};
+const CAT_ORDER=['medical','personal','nursery','kitchen','home','garden','admin','errands','christmas','evening','bathroom','bedroom','hallway','livingroom','stairs','landing','utility','kitchencons','diningroom','outside','extra'];
 const FREQ_LABELS={daily:'Every day',weekdays:'Weekdays','mon-wed-fri':'Mon/Wed/Fri','tue-thu':'Tue/Thu','wed-fri':'Wed/Fri','weekly-mon':'Weekly (Mon)','weekly-wed':'Weekly (Wed)','weekly-fri':'Weekly (Fri)','as-needed':'As needed'};
 
 function todayKey(){
@@ -466,17 +468,18 @@ function todayKey(){
 
 let _viewOffset=0; // 0=today (used for reset), will be overridden by getCleanerDayOffset
 
-// Returns the number of days until the next occurrence of a given weekday (0=Sun,1=Mon...6=Sat)
-// If today is that day, returns 0 (show today's date for that day)
-function daysUntilWeekday(targetDay){
-  const today=new Date().getDay();
-  const diff=(targetDay-today+7)%7;
-  return diff===0?0:diff;
+// Returns offset to the NEXT Wednesday after today (never 0)
+function wedOffset(){
+  const d=new Date().getDay();
+  const diff=(3-d+7)%7;
+  return diff===0?7:diff; // if today IS Wed, go to next Wed
 }
-
-// Get offset for next Wednesday (3) or Friday (5)
-function wedOffset(){return daysUntilWeekday(3)||7;} // if today is Wed, show next Wed
-function friOffset(){return daysUntilWeekday(5)||7;} // if today is Fri, show next Fri
+// Returns offset to the NEXT Friday after today (never 0)
+function friOffset(){
+  const d=new Date().getDay();
+  const diff=(5-d+7)%7;
+  return diff===0?7:diff; // if today IS Fri, go to next Fri
+}
 
 function viewKey(){
   const d=new Date();
@@ -750,7 +753,7 @@ function renderToday(){
   const viewDate=new Date();
   viewDate.setDate(viewDate.getDate()+_viewOffset);
   const dateStr=DAYS[viewDate.getDay()]+', '+viewDate.getDate()+' '+MONTHS[viewDate.getMonth()];
-  const isTomorrow=_viewOffset!==0;
+  const isTomorrow=_viewOffset!==0; // kept for compatibility
   const xmasOn=state.settings.christmasMode==='true';
   const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn))
     .sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
@@ -768,22 +771,28 @@ function renderToday(){
   const done=visibleToday.filter(t=>state.checked.includes(t.id)).length;
   const pct=total?Math.round(done/total*100):0;
 
-  // Build Wednesday and Friday date labels
+  // Build date labels for upcoming Wed and Fri
   const wedDate=new Date();wedDate.setDate(wedDate.getDate()+wedOffset());
   const friDate=new Date();friDate.setDate(friDate.getDate()+friOffset());
   const wedLabel=`Wed ${wedDate.getDate()} ${MONTHS[wedDate.getMonth()]}`;
   const friLabel=`Fri ${friDate.getDate()} ${MONTHS[friDate.getMonth()]}`;
+  const isToday=_viewOffset===0;
   const isWed=_viewOffset===wedOffset();
   const isFri=_viewOffset===friOffset();
+
+  function pill(label,offset,active){
+    return`<button onclick="switchView(${offset})" ontouchstart="event.preventDefault();switchView(${offset})" style="padding:6px 12px;border-radius:20px;border:1.5px solid ${active?'var(--forest)':'var(--linen)'};background:${active?'var(--forest)':'transparent'};color:${active?'#fff':'var(--driftwood)'};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;white-space:nowrap">${label}</button>`;
+  }
 
   let html=`
   <div style="padding:18px 16px 4px">
     <div style="font-size:13px;color:var(--pebble);font-weight:500">${dateStr}</div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px">
-      <div style="font-size:22px;font-weight:700;color:var(--stone)">${isTomorrow||isWed||isFri?'Planned tasks':'Today\'s tasks'}</div>
+      <div style="font-size:22px;font-weight:700;color:var(--stone)">${isToday?'Today\'s tasks':'Planned tasks'}</div>
       <div style="display:flex;gap:6px">
-        <button onclick="switchView(wedOffset())" ontouchstart="event.preventDefault();switchView(wedOffset())" style="padding:6px 12px;border-radius:20px;border:1.5px solid ${isWed?'var(--forest)':'var(--linen)'};background:${isWed?'var(--forest)':'transparent'};color:${isWed?'#fff':'var(--driftwood)'};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;white-space:nowrap">${wedLabel}</button>
-        <button onclick="switchView(friOffset())" ontouchstart="event.preventDefault();switchView(friOffset())" style="padding:6px 12px;border-radius:20px;border:1.5px solid ${isFri?'var(--forest)':'var(--linen)'};background:${isFri?'var(--forest)':'transparent'};color:${isFri?'#fff':'var(--driftwood)'};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;white-space:nowrap">${friLabel}</button>
+        ${pill('Today',0,isToday)}
+        ${pill(wedLabel,wedOffset(),isWed)}
+        ${pill(friLabel,friOffset(),isFri)}
       </div>
     </div>
   </div>
@@ -1256,6 +1265,8 @@ function _renderAdminHTML(){
         <input type="text" id="new-name" placeholder="Task name" autocomplete="off">
         <select id="new-cat">
           <option value="kitchencons">Kitchen / conservatory</option>
+          <option value="diningroom">Dining room</option>
+          <option value="outside">Outside</option>
           <option value="bathroom">Bathroom</option>
           <option value="bedroom">Bedroom</option>
           <option value="hallway">Hallway</option>
