@@ -466,7 +466,16 @@ function todayKey(){
   return d.getFullYear()+'-'+mm+'-'+dd;
 }
 
-let _viewOffset=0; // 0=today (used for reset), will be overridden by getCleanerDayOffset
+// Default to next cleaning day (Wed or Fri), unless today IS a cleaning day
+function defaultCleaningOffset(){
+  const day=new Date().getDay();
+  if(day===3||day===5)return 0; // today is Wed or Fri
+  // Pick whichever cleaning day comes soonest
+  const w=wedOffset();
+  const f=friOffset();
+  return w<f?w:f;
+}
+let _viewOffset=defaultCleaningOffset();
 
 // Returns offset to the NEXT Wednesday after today (never 0)
 function wedOffset(){
@@ -582,8 +591,8 @@ function goScreen(name){
     pb.style.letterSpacing=easy?'.02em':'0';
   }
   if(name==='today'){
-    const wasOnOtherDay=_viewOffset!==0;
-    _viewOffset=0;
+    const wasOnOtherDay=_viewOffset!==defaultCleaningOffset();
+    _viewOffset=defaultCleaningOffset();
     if(state.tasks.length===0||wasOnOtherDay)loadToday();
     else{renderToday();if(!_saveExtrasPending&&_savesInFlight===0)refreshToday();}
   }
@@ -758,6 +767,7 @@ function renderToday(){
   const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn))
     .sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
   const dailyTasks=active.filter(t=>isScheduledToday(t.freq,viewDate)&&t.freq!=='as-needed');
+  console.log('viewDate day:',viewDate.getDay(),'offset:',_viewOffset,'active tasks:',active.length,'daily tasks:',dailyTasks.length,'freqs:',active.map(t=>t.freq));
   const pickedTasks=getPickedTaskObjects();
   const activeSessIds=new Set(state.sessions.filter(s=>s.active!==false).map(s=>s.id));
   const allToday=[...dailyTasks,...pickedTasks,...state.freeExtras]
@@ -776,6 +786,7 @@ function renderToday(){
   const friDate=new Date();friDate.setDate(friDate.getDate()+friOffset());
   const wedLabel=`Wed ${wedDate.getDate()} ${MONTHS[wedDate.getMonth()]}`;
   const friLabel=`Fri ${friDate.getDate()} ${MONTHS[friDate.getMonth()]}`;
+  const todayIsCleaningDay=new Date().getDay()===3||new Date().getDay()===5;
   const isToday=_viewOffset===0;
   const isWed=_viewOffset===wedOffset();
   const isFri=_viewOffset===friOffset();
@@ -788,9 +799,9 @@ function renderToday(){
   <div style="padding:18px 16px 4px">
     <div style="font-size:13px;color:var(--pebble);font-weight:500">${dateStr}</div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px">
-      <div style="font-size:22px;font-weight:700;color:var(--stone)">${isToday?'Today\'s tasks':'Planned tasks'}</div>
+      <div style="font-size:22px;font-weight:700;color:var(--stone)">${isToday&&todayIsCleaningDay?'Today\'s tasks':'Planned tasks'}</div>
       <div style="display:flex;gap:6px">
-        ${pill('Today',0,isToday)}
+        ${todayIsCleaningDay?pill('Today',0,isToday):''}
         ${pill(wedLabel,wedOffset(),isWed)}
         ${pill(friLabel,friOffset(),isFri)}
       </div>
