@@ -768,6 +768,7 @@ function renderToday(){
   const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn))
     .sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
   const dailyTasks=active.filter(t=>isScheduledToday(t.freq,viewDate)&&t.freq!=='as-needed');
+  console.log('DEBUG renderToday — tasks:',state.tasks.length,'active:',active.length,'daily:',dailyTasks.length,'viewDay:',viewDate.getDay(),'offset:',_viewOffset);
   const pickedTasks=getPickedTaskObjects();
   const activeSessIds=new Set(state.sessions.filter(s=>s.active!==false).map(s=>s.id));
   const allSessIds=new Set(state.sessions.map(s=>s.id));
