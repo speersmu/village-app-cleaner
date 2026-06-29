@@ -774,6 +774,8 @@ function renderToday(){
   const allSessIds=new Set(state.sessions.map(s=>s.id));
   const allToday=[...dailyTasks,...pickedTasks,...state.freeExtras]
     .filter(t=>!state.hiddenToday.includes(String(t.id)));
+  console.log('allToday:',allToday.length,'sessions:',state.sessions.length,'allSessIds:',[...allSessIds]);
+  if(allToday[0])console.log('first task:',allToday[0].name,'session:',allToday[0].session,'getEffective:',getEffectiveSession(allToday[0]));
   // Show tasks if: unassigned, in an active session, OR session not recognised (treat as unassigned)
   const visibleToday=allToday.filter(t=>{
     const sid=getEffectiveSession(t);
@@ -781,6 +783,7 @@ function renderToday(){
     if(!allSessIds.has(sid))return true; // unrecognised session = show as unassigned
     return activeSessIds.has(sid);
   });
+  console.log('visibleToday:',visibleToday.length);
   const total=visibleToday.length;
   const done=visibleToday.filter(t=>state.checked.includes(t.id)).length;
   const pct=total?Math.round(done/total*100):0;
