@@ -535,15 +535,16 @@ let appUnlocked=false; // declared here so all functions can reference it
 let pinBuffer='';
 
 function isScheduledToday(freq, date){
+  const f=(freq||'').toString().trim().toLowerCase();
   const d=(date||new Date()).getDay();
-  if(freq==='daily')return true;
-  if(freq==='weekdays')return d>=1&&d<=5;
-  if(freq==='mon-wed-fri')return[1,3,5].includes(d);
-  if(freq==='tue-thu')return[2,4].includes(d);
-  if(freq==='weekly-mon')return d===1;
-  if(freq==='weekly-wed')return d===3;
-  if(freq==='weekly-fri')return d===5;
-  if(freq==='wed-fri')return d===3||d===5;
+  if(f==='daily')return true;
+  if(f==='weekdays')return d>=1&&d<=5;
+  if(f==='mon-wed-fri')return[1,3,5].includes(d);
+  if(f==='tue-thu')return[2,4].includes(d);
+  if(f==='weekly-mon')return d===1;
+  if(f==='weekly-wed')return d===3;
+  if(f==='weekly-fri')return d===5;
+  if(f==='wed-fri')return d===3||d===5;
   return false;
 }
 function isNonDaily(freq){return freq!=='daily'&&freq!=='as-needed'&&freq!=='weekdays'&&freq!=='mon-wed-fri'&&freq!=='tue-thu'&&freq!=='weekly-mon'&&freq!=='weekly-wed'&&freq!=='weekly-fri'||freq==='as-needed'}
@@ -767,15 +768,17 @@ function renderToday(){
   const active=state.tasks.filter(t=>t.active&&(t.cat!=='christmas'||xmasOn))
     .sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
   const dailyTasks=active.filter(t=>isScheduledToday(t.freq,viewDate)&&t.freq!=='as-needed');
-  console.log('viewDate day:',viewDate.getDay(),'offset:',_viewOffset,'active tasks:',active.length,'daily tasks:',dailyTasks.length,'freqs:',active.map(t=>t.freq));
   const pickedTasks=getPickedTaskObjects();
   const activeSessIds=new Set(state.sessions.filter(s=>s.active!==false).map(s=>s.id));
+  const allSessIds=new Set(state.sessions.map(s=>s.id));
   const allToday=[...dailyTasks,...pickedTasks,...state.freeExtras]
     .filter(t=>!state.hiddenToday.includes(String(t.id)));
-  // Only count tasks that are actually visible (in active sessions or unassigned shown)
+  // Show tasks if: unassigned, in an active session, OR session not recognised (treat as unassigned)
   const visibleToday=allToday.filter(t=>{
     const sid=getEffectiveSession(t);
-    return sid==='unset'||activeSessIds.has(sid);
+    if(sid==='unset')return true;
+    if(!allSessIds.has(sid))return true; // unrecognised session = show as unassigned
+    return activeSessIds.has(sid);
   });
   const total=visibleToday.length;
   const done=visibleToday.filter(t=>state.checked.includes(t.id)).length;
@@ -846,8 +849,14 @@ function renderToday(){
     });
   });
 
-  // Unassigned tasks at the bottom
-  const unassigned=sessionGroups['unset']||[];
+  // Unassigned tasks at the bottom — includes tasks with unrecognised session IDs
+  const unassigned=[
+    ...(sessionGroups['unset']||[]),
+    ...allToday.filter(t=>{
+      const sid=getEffectiveSession(t);
+      return sid!=='unset'&&!allSessIds.has(sid);
+    })
+  ];
   if(unassigned.length){
     html+=`<div class="sec-label" style="color:var(--pebble)">📋 Unassigned</div>`;
     unassigned.forEach(t=>{
