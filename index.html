@@ -1740,14 +1740,9 @@ function printWithSessions(selectedSessions){
           <span style="font-size:14px;font-weight:700;color:#1a1a2e;letter-spacing:.02em">${label}${carerLine}</span>
           <span style="margin-left:auto;font-size:12px;color:#6b7280">${countLabel}</span>
         </div>
-        <table style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb;border-radius:0 0 8px 8px;overflow:hidden">
+        <table style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb;border-radius:0 0 8px 8px;overflow:hidden;margin-bottom:0">
           ${tasks.map(taskRow).join('')}
         </table>
-        <div class="print-signoff" style="margin-top:10px;padding:8px 14px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;color:#9ca3af;display:flex;justify-content:space-between">
-          <span>Carer: ___________________________</span>
-          <span>Time: ____________</span>
-          <span>Signature: ___________________________</span>
-        </div>
       </div>`;
   }
 
@@ -1768,7 +1763,7 @@ function printWithSessions(selectedSessions){
     <div style="padding:20px 28px 28px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #1a1a2e">
         <div>
-          <div style="font-size:22px;font-weight:700;color:#1a1a2e">Daily Care Tasks</div>
+          <div style="font-size:22px;font-weight:700;color:#1a1a2e">Daily Cleaning Tasks</div>
           <div style="font-size:14px;color:#6b7280;margin-top:4px">${dateStr}</div>
         </div>
         <div style="text-align:right">
